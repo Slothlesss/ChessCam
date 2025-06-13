@@ -126,4 +126,10 @@ public class ChessSpawner : Singleton<ChessSpawner>
         float posY = BoardUIOriginY - row * CellSize;
         return new Vector2(posX, posY);
     }
+
+
+    public Dictionary<string, Sprite> GetPiecePrefabMap()
+    {
+        return piecePrefabMap;
+    }
 }

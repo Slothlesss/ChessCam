@@ -1,10 +1,11 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class ChessTile : MonoBehaviour, IPointerClickHandler
+public class ChessTile : MonoBehaviour
 {
     public Vector2Int gridPos; // must be set when spawning tiles
 
+    /*
     public void OnPointerClick(PointerEventData eventData)
     {
         if (ChessPiece.selectedPiece != null)
@@ -21,6 +22,7 @@ public class ChessTile : MonoBehaviour, IPointerClickHandler
             ChessPiece.selectedPiece = null;
         }
     }
+    */
 
 }
 

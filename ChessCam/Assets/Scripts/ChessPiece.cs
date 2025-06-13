@@ -3,7 +3,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
-public class ChessPiece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler
+public class ChessPiece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     private RectTransform rectTransform;
     private CanvasGroup canvasGroup;
@@ -88,13 +88,13 @@ public class ChessPiece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         rectTransform.anchoredPosition = tileObject.GetComponent<RectTransform>().anchoredPosition;
         gridPos = targetGrid;
 
+        if (pieceType.Contains("pawn") && (gridPos.y == 0 || gridPos.y == 7))
+        {
+            PromotePawn();
+        }
+
+
         selectedPiece = null;
-    }
-
-
-    public void OnPointerClick(PointerEventData eventData)
-    {
-        selectedPiece = selectedPiece == this ? null : this;
     }
 
     private void CancelMove()
@@ -143,4 +143,15 @@ public class ChessPiece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
 
     private bool IsWhite() => pieceType.StartsWith("white");
+
+    private void PromotePawn()
+    {
+        string color = pieceType.Split('-')[0];  // "white" or "black"
+        string newType = color + "-queen";       // Promote to queen by default
+
+        // Optionally destroy this object and spawn a new one
+        GetComponent<Image>().sprite = ChessSpawner.Instance.GetPiecePrefabMap()[newType];
+        pieceType = newType;
+    }
+
 }

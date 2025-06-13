@@ -69,9 +69,10 @@ public static class ChessRules
 
         // Diagonal captures
         Vector2Int[] diagonals = {
-        new Vector2Int(pos.x - 1, pos.y + direction),
-        new Vector2Int(pos.x + 1, pos.y + direction)
-    };
+            new Vector2Int(pos.x - 1, pos.y + direction),
+            new Vector2Int(pos.x + 1, pos.y + direction)
+        };
+
         foreach (var diag in diagonals)
         {
             if (IsInsideBoard(diag) && isEnemy(diag))
