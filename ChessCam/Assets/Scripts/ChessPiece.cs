@@ -10,8 +10,8 @@ public class ChessPiece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     private Vector2 originalPosition;
     public static ChessPiece selectedPiece;
 
-    public Vector2Int gridPos;   // Logical board position
-    public string pieceType;     // E.g. "white-knight"
+    public Vector2Int gridPos;
+    public string pieceType;
 
     void Awake()
     {
@@ -90,7 +90,7 @@ public class ChessPiece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
         if (pieceType.Contains("pawn") && (gridPos.y == 0 || gridPos.y == 7))
         {
-            PromotePawn();
+            PromotionUIManager.Instance.DisplayPromotionOptions(this);
         }
 
 
@@ -144,14 +144,9 @@ public class ChessPiece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     private bool IsWhite() => pieceType.StartsWith("white");
 
-    private void PromotePawn()
+    public RectTransform GetRectTransform()
     {
-        string color = pieceType.Split('-')[0];  // "white" or "black"
-        string newType = color + "-queen";       // Promote to queen by default
-
-        // Optionally destroy this object and spawn a new one
-        GetComponent<Image>().sprite = ChessSpawner.Instance.GetPiecePrefabMap()[newType];
-        pieceType = newType;
+        return rectTransform;
     }
 
 }

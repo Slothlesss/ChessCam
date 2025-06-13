@@ -37,11 +37,11 @@ public class ChessSpawner : Singleton<ChessSpawner>
     private const float BoardUIOriginX = -350f; // Top-left corner X in anchored space
     private const float BoardUIOriginY = 350f;  // Top-left corner Y in anchored space
 
-    private Dictionary<string, Sprite> piecePrefabMap;
+    private Dictionary<string, Sprite> pieceSpriteMap;
 
     void Awake()
     {
-        piecePrefabMap = new Dictionary<string, Sprite>()
+        pieceSpriteMap = new Dictionary<string, Sprite>()
         {
             { "white-king", whiteKingPrefab },
             { "white-queen", whiteQueenPrefab },
@@ -68,7 +68,7 @@ public class ChessSpawner : Singleton<ChessSpawner>
 
         Debug.Log($"Spawn: {prediction.@class} at cell {cell}, anchoredPos {anchoredPos}");
 
-        if (piecePrefabMap.TryGetValue(prediction.@class, out Sprite sprite))
+        if (pieceSpriteMap.TryGetValue(prediction.@class, out Sprite sprite))
         {
             GameObject piece = Instantiate(piecePrefab, parent.transform);
 
@@ -128,8 +128,8 @@ public class ChessSpawner : Singleton<ChessSpawner>
     }
 
 
-    public Dictionary<string, Sprite> GetPiecePrefabMap()
+    public Dictionary<string, Sprite> GetPieceSpriteMap()
     {
-        return piecePrefabMap;
+        return pieceSpriteMap;
     }
 }
