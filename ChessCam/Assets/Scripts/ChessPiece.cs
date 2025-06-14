@@ -11,7 +11,9 @@ public class ChessPiece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     public static ChessPiece selectedPiece;
 
     public Vector2Int gridPos;
-    public string pieceType;
+    public string pieceType; 
+    public bool hasMoved = false;
+
 
     void Awake()
     {
@@ -82,6 +84,22 @@ public class ChessPiece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             }
         }
 
+        if (pieceType.Contains("king") && targetGrid.y == gridPos.y && Mathf.Abs(targetGrid.x - gridPos.x) == 2)
+        {
+            int dir = targetGrid.x - gridPos.x;
+
+            Vector2Int rookPos = dir < 0 ? new Vector2Int(0, gridPos.y) : new Vector2Int(7, gridPos.y); 
+            if (board.TryGetValue(rookPos, out ChessPiece rookPiece))
+            {
+                board.Remove(rookPos);
+                Vector2Int newRookPos = gridPos + new Vector2Int(dir / 2, 0);
+                board[newRookPos] = rookPiece;
+                rookPiece.rectTransform.anchoredPosition = ChessSpawner.Instance.GridToAnchoredPosition(newRookPos);
+                rookPiece.gridPos = newRookPos;
+                rookPiece.hasMoved = true;
+            }
+        }
+
         // Move the piece
         board.Remove(gridPos);
         board[targetGrid] = this;
@@ -93,7 +111,7 @@ public class ChessPiece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             PromotionUIManager.Instance.DisplayPromotionOptions(this);
         }
 
-
+        hasMoved = true;
         selectedPiece = null;
     }
 
@@ -111,7 +129,12 @@ public class ChessPiece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         List<Vector2Int> validMoves = typeOnly switch
         {
             "knight" => ChessRules.GetKnightMoves(from),
-            "king" => ChessRules.GetKingMoves(from),
+            "king" => ChessRules.GetKingMovesWithCastling(
+                from,
+                IsWhite(),
+                hasMoved,
+                IsSquareOccupied
+            ),
             "rook" => ChessRules.GetRookMoves(from),
             "bishop" => ChessRules.GetBishopMoves(from),
             "queen" => ChessRules.GetQueenMoves(from),

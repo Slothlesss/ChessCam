@@ -30,6 +30,8 @@ public class ChessSpawner : Singleton<ChessSpawner>
     [Header("Current Pieces")] 
     public Dictionary<Vector2Int, ChessPiece> boardMap = new Dictionary<Vector2Int, ChessPiece>();
 
+    [Header("Board State")]
+    public bool isBoardFlip = false;
 
     // Constants
     private const int GridSize = 8;
@@ -56,6 +58,13 @@ public class ChessSpawner : Singleton<ChessSpawner>
             { "black-rook", blackRookPrefab },
             { "black-pawn", blackPawnPrefab },
         };
+    }
+
+    private void Start()
+    {
+        imageWidth = RoboflowUploader.Instance.GetImageWidth();
+        imageHeight = RoboflowUploader.Instance.GetImageHeight();
+
     }
 
     public void SpawnPieceFromDetection(Prediction prediction)
@@ -105,6 +114,11 @@ public class ChessSpawner : Singleton<ChessSpawner>
         boardMap.Clear();
     }
 
+    public Dictionary<string, Sprite> GetPieceSpriteMap()
+    {
+        return pieceSpriteMap;
+    }
+
 
     /// <summary>
     /// Converts Roboflow's prediction (x,y in pixel space) to 8x8 grid coordinates (0,0) top-left.
@@ -128,8 +142,13 @@ public class ChessSpawner : Singleton<ChessSpawner>
     }
 
 
-    public Dictionary<string, Sprite> GetPieceSpriteMap()
+    /// <summary>
+    /// Converts 8x8 grid coordinate to UI anchored position relative to parent RectTransform.
+    /// </summary>
+    public Vector2 GridToAnchoredPosition(Vector2Int pos)
     {
-        return pieceSpriteMap;
+        float posX = BoardUIOriginX + pos.x * CellSize;
+        float posY = BoardUIOriginY - pos.y * CellSize;
+        return new Vector2(posX, posY);
     }
 }

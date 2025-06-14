@@ -25,6 +25,47 @@ public static class ChessRules
 
         return FilterInsideBoard(pos, offsets);
     }
+    public static List<Vector2Int> GetKingMovesWithCastling(Vector2Int pos, bool isWhite, bool hasMoved, System.Func<Vector2Int, bool> isOccupied)
+    {
+        List<Vector2Int> moves = GetKingMoves(pos);
+
+        if (hasMoved) return moves;
+
+        var board = ChessSpawner.Instance.boardMap;
+        bool flip = ChessSpawner.Instance.isBoardFlip;
+
+        int y = pos.y; // king's current row
+
+        // Loop over both potential rooks (0,y) and (7,y)
+        foreach (int rookX in new int[] { 0, 7 })
+        {
+            if (!board.TryGetValue(new Vector2Int(rookX, y), out ChessPiece rook)) continue;
+            if (!rook.pieceType.Contains("rook") || rook.hasMoved) continue;
+
+            // Determine direction and range to check
+            int dir = (rookX < pos.x) ? -1 : 1;
+
+            bool pathClear = true;
+            for (int x = pos.x + dir; x != rookX; x += dir)
+            {
+                if (isOccupied(new Vector2Int(x, y)))
+                {
+                    pathClear = false;
+                    break;
+                }
+            }
+
+            if (pathClear)
+            {
+                // Move king 2 steps toward rook
+                moves.Add(new Vector2Int(pos.x + 2 * dir, y));
+            }
+        }
+
+        return moves;
+    }
+
+
     public static List<Vector2Int> GetRookMoves(Vector2Int pos)
     {
         return GetLinearMoves(pos, new Vector2Int[] {
@@ -51,7 +92,8 @@ public static class ChessRules
     public static List<Vector2Int> GetPawnMoves(Vector2Int pos, bool isWhite, System.Func<Vector2Int, bool> isOccupied, System.Func<Vector2Int, bool> isEnemy)
     {
         List<Vector2Int> moves = new List<Vector2Int>();
-        int direction = isWhite ? 1 : -1;
+        int direction = isWhite ? (ChessSpawner.Instance.isBoardFlip ? 1 : -1)
+                                : (ChessSpawner.Instance.isBoardFlip ? -1 : 1);
 
         Vector2Int forward = new Vector2Int(pos.x, pos.y + direction);
         if (IsInsideBoard(forward) && !isOccupied(forward))
@@ -60,7 +102,8 @@ public static class ChessRules
 
             // First double step
             Vector2Int doubleForward = new Vector2Int(pos.x, pos.y + 2 * direction);
-            bool isAtInitialRow = isWhite ? pos.y == 1 : pos.y == 6;
+            bool isAtInitialRow = isWhite ? (ChessSpawner.Instance.isBoardFlip ? pos.y == 1 : pos.y == 6)
+                                          : (ChessSpawner.Instance.isBoardFlip ? pos.y == 6 : pos.y == 1);
             if (isAtInitialRow && !isOccupied(doubleForward))
             {
                 moves.Add(doubleForward);
@@ -117,4 +160,5 @@ public static class ChessRules
         }
         return result;
     }
+
 }
