@@ -66,26 +66,29 @@ public static class ChessRules
     }
 
 
-    public static List<Vector2Int> GetRookMoves(Vector2Int pos)
+    public static List<Vector2Int> GetRookMoves(Vector2Int pos, System.Func<Vector2Int, bool> isOccupied, System.Func<Vector2Int, bool> isEnemy)
     {
-        return GetLinearMoves(pos, new Vector2Int[] {
-            Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right
-        });
+        return GetLinearMoves(
+            pos, 
+            new Vector2Int[] {Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right}, 
+            isOccupied,
+            isEnemy
+        );
     }
 
-    public static List<Vector2Int> GetBishopMoves(Vector2Int pos)
+    public static List<Vector2Int> GetBishopMoves(Vector2Int pos, System.Func<Vector2Int, bool> isOccupied, System.Func<Vector2Int, bool> isEnemy)
     {
         return GetLinearMoves(pos, new Vector2Int[] {
             new Vector2Int(1, 1), new Vector2Int(1, -1),
             new Vector2Int(-1, 1), new Vector2Int(-1, -1)
-        });
+        }, isOccupied, isEnemy);
     }
 
-    public static List<Vector2Int> GetQueenMoves(Vector2Int pos)
+    public static List<Vector2Int> GetQueenMoves(Vector2Int pos, System.Func<Vector2Int, bool> isOccupied, System.Func<Vector2Int, bool> isEnemy)
     {
         var allMoves = new List<Vector2Int>();
-        allMoves.AddRange(GetRookMoves(pos));
-        allMoves.AddRange(GetBishopMoves(pos));
+        allMoves.AddRange(GetRookMoves(pos, isOccupied, isEnemy));
+        allMoves.AddRange(GetBishopMoves(pos, isOccupied, isEnemy));
         return allMoves;
     }
 
@@ -146,7 +149,7 @@ public static class ChessRules
         return result;
     }
 
-    private static List<Vector2Int> GetLinearMoves(Vector2Int pos, Vector2Int[] directions)
+    private static List<Vector2Int> GetLinearMoves(Vector2Int pos, Vector2Int[] directions, System.Func<Vector2Int, bool> isOccupied, System.Func<Vector2Int, bool> isEnemy)
     {
         List<Vector2Int> result = new List<Vector2Int>();
         foreach (var dir in directions)
@@ -154,6 +157,14 @@ public static class ChessRules
             Vector2Int current = pos + dir;
             while (IsInsideBoard(current))
             {
+                if (isOccupied(current))
+                {
+                    if (isEnemy(current))
+                    {
+                        result.Add(current);
+                    }
+                    break;
+                }
                 result.Add(current);
                 current += dir;
             }

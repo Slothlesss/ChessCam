@@ -686,8 +686,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1336724614}
-        m_TargetAssemblyTypeName: RoboflowInference, Assembly-CSharp
-        m_MethodName: GetResponseFromRoboflow
+        m_TargetAssemblyTypeName: RoboflowUploader, Assembly-CSharp
+        m_MethodName: GetResponseFromMyServer
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -780,6 +780,51 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &745691725
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 745691726}
+  - component: {fileID: 745691727}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &745691726
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 745691725}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1142.7701, y: 535.6337, z: 4.1530395}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &745691727
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 745691725}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2ef9b378b1debb4bbbf223b576029e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentTurn: 0
 --- !u!1 &818923884
 GameObject:
   m_ObjectHideFlags: 0
@@ -1284,15 +1329,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e92cfa74fc42ef4db67c649a1d27ae2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  modelId: chessdetection-uhtoo/1
-  apiKey: 454LyvkAPO9ikEV3oHnm
-  image: {fileID: 2800000, guid: 13db880d892c5314db4098d21b0b9b80, type: 3}
+  image: {fileID: 0}
   result:
-    inference_id: 
-    time: 0
-    image:
-      width: 0
-      height: 0
     predictions: []
 --- !u!1 &1494874190
 GameObject:
@@ -1832,20 +1870,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   piecePrefab: {fileID: 1918432256486849396, guid: dccea81f16de3d749aabaa38f55c5bfa, type: 3}
   parent: {fileID: 2021502420}
-  whiteKingPrefab: {fileID: 21300000, guid: df2c2c84cf410064883d6dc998d8a0b2, type: 3}
-  whiteQueenPrefab: {fileID: 21300000, guid: bbd0404844b7e0642a389872bff511c3, type: 3}
-  whiteBishopPrefab: {fileID: 21300000, guid: 107c8f736ed6f06489ceafae6634a4a8, type: 3}
-  whiteKnightPrefab: {fileID: 21300000, guid: a2ae8495a42a1bf43b53302ec55774bd, type: 3}
-  whiteRookPrefab: {fileID: 21300000, guid: 1a364e5605ec3ce4cb713afa78979de0, type: 3}
-  whitePawnPrefab: {fileID: 21300000, guid: efe33410f23552d43a5ff458cfe2f3b2, type: 3}
-  blackKingPrefab: {fileID: 21300000, guid: b46ad16fb7e355d4c87474b7dec51c15, type: 3}
-  blackQueenPrefab: {fileID: 21300000, guid: 7ad931d2f4d40e748abf03b852370d3c, type: 3}
-  blackBishopPrefab: {fileID: 21300000, guid: c74b648187a2d5146b9360e77b2bf0c9, type: 3}
-  blackKnightPrefab: {fileID: 21300000, guid: 8bab8d18dc539d44fb9a01a7862727e5, type: 3}
-  blackRookPrefab: {fileID: 21300000, guid: d57e12560d38ddf4dbbe21fd87791bf5, type: 3}
-  blackPawnPrefab: {fileID: 21300000, guid: 37b90cb00a2db8c4485a3bcfaf7d3d9d, type: 3}
+  whiteKingPrefab: {fileID: 21300000, guid: 46865d89fd01f4646a77f2c571e22a2e, type: 3}
+  whiteQueenPrefab: {fileID: 21300000, guid: fb4aef320562cf5418c2581980348574, type: 3}
+  whiteBishopPrefab: {fileID: 21300000, guid: 0779a4d15ff8a7a419d181c4f6c2170e, type: 3}
+  whiteKnightPrefab: {fileID: 21300000, guid: b5f287a9d11bbe94db623993b681f366, type: 3}
+  whiteRookPrefab: {fileID: 21300000, guid: 2d8e576eb3400fc42aa98d4b6eb09e55, type: 3}
+  whitePawnPrefab: {fileID: 21300000, guid: 291c9f7ece3b5d141825991c823e3a4b, type: 3}
+  blackKingPrefab: {fileID: 21300000, guid: cfab00ee7730ae24eb77e465253be2bd, type: 3}
+  blackQueenPrefab: {fileID: 21300000, guid: 9c200f181ff7fdd4baa480170d10f33a, type: 3}
+  blackBishopPrefab: {fileID: 21300000, guid: 8b53019b29d2c5f418c548670b2a9a44, type: 3}
+  blackKnightPrefab: {fileID: 21300000, guid: 8ad3361c2a71f3040b96baa592527fb0, type: 3}
+  blackRookPrefab: {fileID: 21300000, guid: 5ccbd86519c58414b96a74107f1537d6, type: 3}
+  blackPawnPrefab: {fileID: 21300000, guid: a6a4fbf54972352449a1280448214491, type: 3}
   imageWidth: 1115
   imageHeight: 1114
+  isBoardFlip: 0
 --- !u!4 &1631508500
 Transform:
   m_ObjectHideFlags: 0
@@ -2382,3 +2421,4 @@ SceneRoots:
   - {fileID: 1336724613}
   - {fileID: 1631508500}
   - {fileID: 662820343}
+  - {fileID: 745691726}

@@ -1,7 +1,8 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using System.Collections.Generic;
 
 public class ChessPiece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
@@ -23,6 +24,12 @@ public class ChessPiece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        if (!GameManager.Instance.IsTurnFor(pieceType))
+        {
+            Debug.Log("Not your turn: " + pieceType);
+            return;
+        }
+
         originalPosition = rectTransform.anchoredPosition; 
         foreach (var kvp in ChessSpawner.Instance.boardMap)
             kvp.Value.GetComponent<CanvasGroup>().blocksRaycasts = false;
@@ -31,11 +38,17 @@ public class ChessPiece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     public void OnDrag(PointerEventData eventData)
     {
-        rectTransform.anchoredPosition += eventData.delta;
+        if (selectedPiece != null)
+        {
+            rectTransform.anchoredPosition += eventData.delta;
+        }
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
+
+        if (selectedPiece == null) return;
+        
         foreach (var kvp in ChessSpawner.Instance.boardMap)
             kvp.Value.GetComponent<CanvasGroup>().blocksRaycasts = true;
 
@@ -113,6 +126,8 @@ public class ChessPiece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
         hasMoved = true;
         selectedPiece = null;
+
+        GameManager.Instance.HandleMove(pieceType);
     }
 
     private void CancelMove()
@@ -135,9 +150,21 @@ public class ChessPiece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 hasMoved,
                 IsSquareOccupied
             ),
-            "rook" => ChessRules.GetRookMoves(from),
-            "bishop" => ChessRules.GetBishopMoves(from),
-            "queen" => ChessRules.GetQueenMoves(from),
+            "rook" => ChessRules.GetRookMoves(
+                from, 
+                IsSquareOccupied, 
+                pos => IsEnemyAt(pos, IsWhite())
+            ),
+            "bishop" => ChessRules.GetBishopMoves(
+                from,
+                IsSquareOccupied,
+                pos => IsEnemyAt(pos, IsWhite())
+            ),
+            "queen" => ChessRules.GetQueenMoves(
+                from,
+                IsSquareOccupied,
+                pos => IsEnemyAt(pos, IsWhite())
+            ),
             "pawn" => ChessRules.GetPawnMoves(
                 from,
                 IsWhite(),
