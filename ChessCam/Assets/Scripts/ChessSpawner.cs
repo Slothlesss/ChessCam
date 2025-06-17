@@ -60,13 +60,6 @@ public class ChessSpawner : Singleton<ChessSpawner>
         };
     }
 
-    private void Start()
-    {
-        imageWidth = RoboflowUploader.Instance.GetImageWidth();
-        imageHeight = RoboflowUploader.Instance.GetImageHeight();
-
-    }
-
     public void SpawnPieceFromDetection(Prediction prediction)
     {
         // Convert pixel position to grid coordinate
@@ -75,14 +68,14 @@ public class ChessSpawner : Singleton<ChessSpawner>
         // Convert to UI anchored position (local coordinates relative to parent)
         Vector2 anchoredPos = GridToAnchoredPosition(cell.x, cell.y);
 
-        Debug.Log($"Spawn: {prediction.@class} at cell {cell}, anchoredPos {anchoredPos}");
+        Debug.Log($"Box: ({prediction.x}, {prediction.y}), Spawn: {prediction.name} at cell {cell}, AnchoredPos {anchoredPos}");
 
-        if (pieceSpriteMap.TryGetValue(prediction.@class, out Sprite sprite))
+        if (pieceSpriteMap.TryGetValue(prediction.name, out Sprite sprite))
         {
             GameObject piece = Instantiate(piecePrefab, parent.transform);
 
             var chessPiece = piece.GetComponent<ChessPiece>();
-            chessPiece.pieceType = prediction.@class;
+            chessPiece.pieceType = prediction.name;
             chessPiece.gridPos = cell;
 
             var rt = piece.GetComponent<RectTransform>();
@@ -93,13 +86,16 @@ public class ChessSpawner : Singleton<ChessSpawner>
         }
         else
         {
-            Debug.LogWarning($"No sprite assigned for class: {prediction.@class}");
+            Debug.LogWarning($"No sprite assigned for class: {prediction.name}");
         }
     }
 
     public void SpawnAll()
     {
-        foreach (var pred in RoboflowUploader.Instance.result.predictions)
+        imageWidth = InferenceManager.Instance.GetImageWidth();
+        imageHeight = InferenceManager.Instance.GetImageHeight();
+
+        foreach (var pred in InferenceManager.Instance.result.predictions)
         {
             SpawnPieceFromDetection(pred);
         }
