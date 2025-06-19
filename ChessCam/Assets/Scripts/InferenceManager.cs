@@ -78,13 +78,15 @@ public class InferenceManager : Singleton<InferenceManager>
             UnityWebRequest request = UnityWebRequest.Post(url, formData);
             request.SetRequestHeader("Accept", "application/json");
 
-            yield return request.SendWebRequest();
+            NotificationManager.Instance.StartLoadingMessage();
+
+            yield return request.SendWebRequest(); 
 
             if (request.result == UnityWebRequest.Result.Success)
             {
                 success = true;
 
-                Debug.Log($"Success (attempt {attempt}):\n{request.downloadHandler.text}");
+                NotificationManager.Instance.ShowMessage("Successfully inference. You can spawn now.", false);
 
                 string wrappedJson = "{\"predictions\":" + request.downloadHandler.text + "}";
 
@@ -92,11 +94,6 @@ public class InferenceManager : Singleton<InferenceManager>
                 result.predictions = result.predictions
                     .Where(pred => pred.confidence >= 0.8f)
                     .ToArray();
-
-                foreach (var pred in result.predictions)
-                {
-                    Debug.Log($"Class: {pred.name}, Box: ({pred.x}, {pred.y}), Confidence: {pred.confidence}");
-                }
             }
             else
             {
@@ -109,11 +106,18 @@ public class InferenceManager : Singleton<InferenceManager>
                 }
                 else
                 {
-                    Debug.LogError("All retries failed.");
+                    StartCoroutine(StopThenShowError());
                 }
             }
         }
     }
+
+    private IEnumerator StopThenShowError()
+    {
+        yield return NotificationManager.Instance.StopLoadingMessage();
+        NotificationManager.Instance.ShowMessage("Server errors. Please try again later.", true);
+    }
+
 
     public void ReceiveImageData(string base64)
     {

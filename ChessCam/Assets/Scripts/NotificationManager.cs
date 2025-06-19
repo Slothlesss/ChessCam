@@ -1,0 +1,117 @@
+using System.Collections;
+using System.Collections.Generic;
+using System.Threading;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class NotificationManager : Singleton<NotificationManager>
+{
+    [Header("UI Elements")]
+    [SerializeField] private CanvasGroup notification;
+    [SerializeField] private Image background;
+    [SerializeField] private TextMeshProUGUI messageUI;
+    [SerializeField] private Sprite errorBackground;
+    [SerializeField] private Sprite successBackground;
+    [SerializeField] private Sprite loadingBackground;
+
+
+    [Header("Timing")]
+    public float fadeDuration = 0.5f;
+    public float displayDuration = 3f;
+
+    private Coroutine currentRoutine;
+    private void Start()
+    {
+        notification.gameObject.SetActive(false);
+    }
+
+    public void ShowMessage(string message, bool isError)
+    {
+        if (currentRoutine != null)
+            StopCoroutine(currentRoutine);
+
+        currentRoutine = StartCoroutine(ShowRoutine(message, isError));
+    }
+
+    public void StartLoadingMessage()
+    {
+        if (currentRoutine != null)
+            StopCoroutine(currentRoutine);
+
+        currentRoutine = StartCoroutine(LoadingDotsRoutine());
+    }
+
+    private IEnumerator ShowRoutine(string message, bool isError)
+    {
+        notification.gameObject.SetActive(true);
+        messageUI.text = message;
+        if (isError)
+        {
+            background.sprite = errorBackground;
+
+        }
+        else
+        {
+            background.sprite = successBackground;
+        }
+
+        // Fade in
+        yield return FadeEffect(notification, 0f, 1f, fadeDuration);
+
+        // Wait
+        yield return new WaitForSeconds(displayDuration);
+
+        // Fade out
+        yield return FadeEffect(notification, 1f, 0f, fadeDuration);
+
+        notification.gameObject.SetActive(false);
+    }
+
+    public IEnumerator StopLoadingMessage()
+    {
+        if (currentRoutine != null)
+        {
+            StopCoroutine(currentRoutine);
+            currentRoutine = null;
+        }
+
+        notification.alpha = 1f;
+        messageUI.text = "Loading complete.";
+        yield return AutoFadeOut();
+    }
+    private IEnumerator LoadingDotsRoutine()
+    {
+        notification.gameObject.SetActive(true);
+        background.sprite = loadingBackground;
+        notification.alpha = 1f;
+
+        string baseText = "Requesting";
+        int dotCount = 0;
+
+        while (true)
+        {
+            dotCount = (dotCount + 1) % 4; // 0 to 3
+            messageUI.text = baseText + new string('.', dotCount);
+            yield return new WaitForSeconds(0.5f);
+        }
+    }
+    private IEnumerator AutoFadeOut()
+    {
+        yield return new WaitForSeconds(displayDuration);
+        yield return FadeEffect(notification, 1f, 0f, fadeDuration);
+        notification.gameObject.SetActive(false);
+    }
+
+    private IEnumerator FadeEffect(CanvasGroup notification, float start, float end, float duration)
+    {
+        float t = 0f;
+        while (t < duration)
+        {
+            t += Time.deltaTime;
+            notification.alpha = Mathf.Lerp(start, end, t / duration);
+            yield return null;
+        }
+        notification.alpha = end;
+    }
+}
