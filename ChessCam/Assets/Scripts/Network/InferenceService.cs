@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 
-public class InferenceManager : Singleton<InferenceManager>
+public class InferenceService : Singleton<InferenceService>
 {
     [SerializeField] private Texture2D image;
 
@@ -62,11 +62,9 @@ public class InferenceManager : Singleton<InferenceManager>
         byte[] imageBytes = image.EncodeToJPG();
 
         List<IMultipartFormSection> formData = new List<IMultipartFormSection>
-    {
-        new MultipartFormFileSection("file", imageBytes, "image.jpg", "image/jpeg")
-    };
-
-        string url = "https://chesscamserver-production.up.railway.app/detect";
+        {
+            new MultipartFormFileSection("file", imageBytes, "image.jpg", "image/jpeg")
+        };
 
         int attempt = 0;
         bool success = false;
@@ -75,10 +73,10 @@ public class InferenceManager : Singleton<InferenceManager>
         {
             attempt++;
 
-            UnityWebRequest request = UnityWebRequest.Post(url, formData);
+            UnityWebRequest request = UnityWebRequest.Post(APIConfig.Inference.DetectEndpoint, formData);
             request.SetRequestHeader("Accept", "application/json");
 
-            NotificationManager.Instance.StartLoadingMessage();
+            NotificationUI.Instance.StartLoadingMessage("Requesting");
 
             yield return request.SendWebRequest(); 
 
@@ -86,14 +84,14 @@ public class InferenceManager : Singleton<InferenceManager>
             {
                 success = true;
 
-                NotificationManager.Instance.ShowMessage("Successfully inference. You can spawn now.", false);
-
                 string wrappedJson = "{\"predictions\":" + request.downloadHandler.text + "}";
 
                 result = JsonUtility.FromJson<InferenceResponse>(wrappedJson);
                 result.predictions = result.predictions
                     .Where(pred => pred.confidence >= 0.8f)
                     .ToArray();
+
+                NotificationUI.Instance.ShowMessage("Successfully inference. You can spawn now.", false);
             }
             else
             {
@@ -114,8 +112,8 @@ public class InferenceManager : Singleton<InferenceManager>
 
     private IEnumerator StopThenShowError()
     {
-        yield return NotificationManager.Instance.StopLoadingMessage();
-        NotificationManager.Instance.ShowMessage("Server errors. Please try again later.", true);
+        yield return NotificationUI.Instance.StopLoadingMessage();
+        NotificationUI.Instance.ShowMessage("Server errors. Please try again later.", true);
     }
 
 

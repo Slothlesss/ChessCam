@@ -2,7 +2,7 @@ using System.Drawing;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PromotionUIManager : Singleton<PromotionUIManager>
+public class PromotionUI : Singleton<PromotionUI>
 {
     public GameObject panel;
     private ChessPiece pendingPawn;

@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class NotificationManager : Singleton<NotificationManager>
+public class NotificationUI : Singleton<NotificationUI>
 {
     [Header("UI Elements")]
     [SerializeField] private CanvasGroup notification;
@@ -17,8 +17,8 @@ public class NotificationManager : Singleton<NotificationManager>
 
 
     [Header("Timing")]
-    public float fadeDuration = 0.5f;
-    public float displayDuration = 3f;
+    public float fadeDuration = 0.2f;
+    public float displayDuration = 1f;
 
     private Coroutine currentRoutine;
     private void Start()
@@ -34,12 +34,12 @@ public class NotificationManager : Singleton<NotificationManager>
         currentRoutine = StartCoroutine(ShowRoutine(message, isError));
     }
 
-    public void StartLoadingMessage()
+    public void StartLoadingMessage(string message)
     {
         if (currentRoutine != null)
             StopCoroutine(currentRoutine);
 
-        currentRoutine = StartCoroutine(LoadingDotsRoutine());
+        currentRoutine = StartCoroutine(LoadingDotsRoutine(message));
     }
 
     private IEnumerator ShowRoutine(string message, bool isError)
@@ -77,16 +77,16 @@ public class NotificationManager : Singleton<NotificationManager>
         }
 
         notification.alpha = 1f;
-        messageUI.text = "Loading complete.";
+        messageUI.text = $"Loading complete.";
         yield return AutoFadeOut();
     }
-    private IEnumerator LoadingDotsRoutine()
+    private IEnumerator LoadingDotsRoutine(string message)
     {
         notification.gameObject.SetActive(true);
         background.sprite = loadingBackground;
         notification.alpha = 1f;
 
-        string baseText = "Requesting";
+        string baseText = $"{message}";
         int dotCount = 0;
 
         while (true)

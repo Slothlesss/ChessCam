@@ -26,6 +26,7 @@ public class ChessPiece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     {
         if (!GameManager.Instance.IsTurnFor(pieceType))
         {
+            NotificationUI.Instance.ShowMessage($"Not {GameManager.Instance.currentTurn} turn", true);
             Debug.Log("Not your turn: " + pieceType);
             return;
         }
@@ -74,7 +75,7 @@ public class ChessPiece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
         if (!IsValidMove(gridPos, targetGrid))
         {
-            Debug.Log("CancelMove: Invalid move");
+            NotificationUI.Instance.ShowMessage("CancelMove: Invalid move", true);
             CancelMove();
             return;
         }
@@ -121,7 +122,7 @@ public class ChessPiece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
         if (pieceType.Contains("pawn") && (gridPos.y == 0 || gridPos.y == 7))
         {
-            PromotionUIManager.Instance.DisplayPromotionOptions(this);
+            PromotionUI.Instance.DisplayPromotionOptions(this);
         }
 
         hasMoved = true;

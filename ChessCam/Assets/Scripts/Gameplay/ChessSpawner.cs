@@ -92,10 +92,10 @@ public class ChessSpawner : Singleton<ChessSpawner>
 
     public void SpawnAll()
     {
-        imageWidth = InferenceManager.Instance.GetImageWidth();
-        imageHeight = InferenceManager.Instance.GetImageHeight();
+        imageWidth = InferenceService.Instance.GetImageWidth();
+        imageHeight = InferenceService.Instance.GetImageHeight();
 
-        foreach (var pred in InferenceManager.Instance.result.predictions)
+        foreach (var pred in InferenceService.Instance.result.predictions)
         {
             SpawnPieceFromDetection(pred);
         }
@@ -146,5 +146,10 @@ public class ChessSpawner : Singleton<ChessSpawner>
         float posX = BoardUIOriginX + pos.x * CellSize;
         float posY = BoardUIOriginY - pos.y * CellSize;
         return new Vector2(posX, posY);
+    }
+
+    public void SetBoardFlip(bool isFlip)
+    {
+        isBoardFlip = isFlip;
     }
 }

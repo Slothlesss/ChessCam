@@ -24,5 +24,15 @@ public class GameManager : Singleton<GameManager>
         return (currentTurn == PlayerTurn.White && pieceType.StartsWith("white")) ||
                (currentTurn == PlayerTurn.Black && pieceType.StartsWith("black"));
     }
-}
+
+    public void SetTurn(bool isWhiteTurn)
+    {
+        if (isWhiteTurn)
+        {
+            currentTurn = PlayerTurn.White;
+        }
+        else
+            currentTurn = PlayerTurn.Black;
+        }
+    }
 
