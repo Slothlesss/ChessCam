@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 
 public static class UserService
 {
@@ -23,8 +24,10 @@ public static class UserService
             else
             {
                 Debug.LogError("Error: " + request.responseCode + " - " + request.error);
-                Debug.LogError("Body: " + request.downloadHandler.text);
-                NotificationUI.Instance.ShowMessage("Server errors. Please try again later.", true);
+                string raw = request.downloadHandler.text;
+                string details = raw.Split(":\"")[1].TrimEnd('}', '"');
+                Debug.LogError("Details: " + details);
+                NotificationUI.Instance.ShowMessage(details, true);
             }
         }
     }
@@ -42,11 +45,15 @@ public static class UserService
             if (request.result == UnityWebRequest.Result.Success)
             {
                 Debug.Log("Success: " + request.downloadHandler.text);
+                NotificationUI.Instance.ShowMessage("Login Success", false);
             }
             else
             {
                 Debug.LogError("Error: " + request.responseCode + " - " + request.error);
-                Debug.LogError("Body: " + request.downloadHandler.text);
+                string raw = request.downloadHandler.text;
+                string details = raw.Split(":\"")[1].TrimEnd('}', '"');
+                Debug.LogError("Details: " + details);
+                NotificationUI.Instance.ShowMessage(details, true);
             }
         }
     }
