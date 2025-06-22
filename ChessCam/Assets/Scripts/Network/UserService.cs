@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
+using UnityEngine.SceneManagement;
 
 public static class UserService
 {
@@ -9,7 +9,7 @@ public static class UserService
     {
         string url = $"{APIConfig.Users.Register}?username={UnityWebRequest.EscapeURL(username)}&password={UnityWebRequest.EscapeURL(password)}";
 
-        NotificationUI.Instance.StartLoadingMessage("Registering");
+        NotificationUI.Instance.StartLoadingMessage("Signing up");
         using (UnityWebRequest request = UnityWebRequest.PostWwwForm(url, ""))
         {
             request.SetRequestHeader("Accept", "application/json");
@@ -35,6 +35,7 @@ public static class UserService
     public static IEnumerator LoginUser(string username, string password)
     {
         string url = $"{APIConfig.Users.Login}?username={UnityWebRequest.EscapeURL(username)}&password={UnityWebRequest.EscapeURL(password)}";
+        NotificationUI.Instance.StartLoadingMessage("Logging in");
 
         using (UnityWebRequest request = UnityWebRequest.PostWwwForm(url, ""))
         {
@@ -46,6 +47,7 @@ public static class UserService
             {
                 Debug.Log("Success: " + request.downloadHandler.text);
                 NotificationUI.Instance.ShowMessage("Login Success", false);
+                SceneManager.LoadScene("Gameplay");
             }
             else
             {

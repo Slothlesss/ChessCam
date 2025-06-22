@@ -27,7 +27,7 @@ public class UserUI : MonoBehaviour
 
         if (password != confirmPassword)
         {
-            Debug.LogWarning("Passwords do not match");
+            NotificationUI.Instance.ShowMessage("Passwords do not match", true);
             return;
         }
 

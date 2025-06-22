@@ -3,7 +3,7 @@ using UnityEngine;
 
 public static class ChessRules
 {
-    public static List<Vector2Int> GetKnightMoves(Vector2Int pos)
+    public static List<Vector2Int> GetKnightMoves(Vector2Int pos, System.Func<Vector2Int, bool> isOccupied, System.Func<Vector2Int, bool> isEnemy)
     {
         Vector2Int[] offsets = {
             new Vector2Int(-2, -1), new Vector2Int(-2, 1),
@@ -12,10 +12,26 @@ public static class ChessRules
             new Vector2Int(2, -1),  new Vector2Int(2, 1),
         };
 
-        return FilterInsideBoard(pos, offsets);
+        List<Vector2Int> validMoves = FilterInsideBoard(pos, offsets);
+
+        List<Vector2Int> results = new List<Vector2Int>();
+        foreach (var move in validMoves)
+        {
+            if (isOccupied(move))
+            {
+                if (isEnemy(move))
+                {
+                    results.Add(move);
+                }
+                continue;
+            }
+            results.Add(move);
+        }
+
+        return results;
     }
 
-    public static List<Vector2Int> GetKingMoves(Vector2Int pos)
+    public static List<Vector2Int> GetKingMoves(Vector2Int pos, System.Func<Vector2Int, bool> isOccupied, System.Func<Vector2Int, bool> isEnemy)
     {
         Vector2Int[] offsets = {
             new Vector2Int(-1, -1) , new Vector2Int(-1, 0), new Vector2Int(-1, 1),
@@ -23,11 +39,28 @@ public static class ChessRules
             new Vector2Int(1, -1)  ,  new Vector2Int(1, 0),  new Vector2Int(1, 1),
         };
 
-        return FilterInsideBoard(pos, offsets);
+        List<Vector2Int> validMoves = FilterInsideBoard(pos, offsets);
+
+        List<Vector2Int> results = new List<Vector2Int>();
+
+        foreach (var move in validMoves)
+        {
+            if (isOccupied(move))
+            {
+                if (isEnemy(move))
+                {
+                    results.Add(move);
+                }
+                continue;
+            }
+            results.Add(move);
+        }
+
+        return results;
     }
-    public static List<Vector2Int> GetKingMovesWithCastling(Vector2Int pos, bool isWhite, bool hasMoved, System.Func<Vector2Int, bool> isOccupied)
+    public static List<Vector2Int> GetKingMovesWithCastling(Vector2Int pos, bool isWhite, bool hasMoved, System.Func<Vector2Int, bool> isOccupied, System.Func<Vector2Int, bool> isEnemy)
     {
-        List<Vector2Int> moves = GetKingMoves(pos);
+        List<Vector2Int> moves = GetKingMoves(pos, isOccupied, isEnemy);
 
         if (hasMoved) return moves;
 

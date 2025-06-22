@@ -52,7 +52,7 @@ public class InferenceService : Singleton<InferenceService>
             }
         }
     }
-    public void GetResponseFromMyServer()
+    public void Inference()
     {
         StartCoroutine(SendImageForInference());
     }
