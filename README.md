@@ -12,4 +12,5 @@
 - Step 2: Click "Inference" and wait until you see "Sucessfully inference...".
 - Step 3: Click "Spawn Pieces".
 - Step 4: (Optional) Change the settings (turn and board flip).
+
 => You can continue the gameplay now.
