@@ -1,11 +1,13 @@
 # ♟️ ChessCam 📸
 
 **ChessCam** is an chessboard recognition app that detects the positions of chess pieces from an image and recreates the board, allowing players to continue a gameplay.
-Try it here: https://slothless.itch.io/chesscam
+
 ![image](https://github.com/user-attachments/assets/dfc3d2ca-3168-4c2f-beb1-59ed653178bd)
 
+## 1. Playable version
+[![Try it here](https://img.shields.io/badge/Try%20it%20here-4CAF50?style=for-the-badge)](https://slothless.itch.io/chesscam)
 
-## 1. How It Works
+## 2. How It Works
 - Step 1: Click "Choose Image" to upload a chessboard image.
 - Step 2: Click "Inference" and wait until you see "Sucessfully inference...".
 - Step 3: Click "Spawn Pieces".
