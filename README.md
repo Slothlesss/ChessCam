@@ -7,9 +7,9 @@
 ## 1. Playable version
 [![Try it here](https://img.shields.io/badge/Try%20it%20here-4CAF50?style=for-the-badge)](https://slothless.itch.io/chesscam)
 
-## 2. How It Works
+## 2. Instruction
 - Step 1: Click "Choose Image" to upload a chessboard image.
 - Step 2: Click "Inference" and wait until you see "Sucessfully inference...".
 - Step 3: Click "Spawn Pieces".
 - Step 4: (Optional) Change the settings (turn and board flip).
-
+=> You can continue the gameplay now.
