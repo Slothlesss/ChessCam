@@ -32,11 +32,10 @@ public class HistorySpawner : MonoBehaviour
         {
             GameObject tempBoard = Instantiate(boardPrefab, renderHolder);
             TileSpawner.Instance.SpawnTiles(tempBoard, cellSize);
-
             List<Prediction> preds = item.GetParsedPredictions();
             foreach (var pred in preds)
             {
-                ChessSpawner.Instance.SpawnPieceFromDetection(pred, tempBoard.transform, cellSize);
+                ChessSpawner.Instance.SpawnPiecesForThumbnail(pred, tempBoard.transform, cellSize, item.image_width, item.image_height);
             }
 
             yield return new WaitForEndOfFrame();

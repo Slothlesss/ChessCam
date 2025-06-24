@@ -28,6 +28,8 @@ public class InferenceHistoryItem
 {
     public int id;
     public string predictions;
+    public int image_width;
+    public int image_height;
     public string created_at;
     public int user_id;
 

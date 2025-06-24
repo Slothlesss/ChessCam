@@ -62,7 +62,7 @@ public class ChessSpawner : Singleton<ChessSpawner>
     public void SpawnPieceFromDetection(Prediction prediction, Transform parent, float cellSize)
     {
         // Convert pixel position to grid coordinate
-        Vector2Int cell = DetectionToGridCell(prediction.x, prediction.y);
+        Vector2Int cell = DetectionToGridCell(prediction.x, prediction.y, imageWidth, imageHeight);
 
         // Convert to UI anchored position (local coordinates relative to parent)
         Vector2 anchoredPos = GridToAnchoredPosition(cell.x, cell.y, cellSize);
@@ -82,6 +82,33 @@ public class ChessSpawner : Singleton<ChessSpawner>
             piece.GetComponent<Image>().sprite = sprite;
 
             boardMap[cell] = chessPiece;
+        }
+        else
+        {
+            Debug.LogWarning($"No sprite assigned for class: {prediction.name}");
+        }
+    }
+
+    public void SpawnPiecesForThumbnail(Prediction prediction, Transform parent, float cellSize, int width, int height)
+    {
+        // Convert pixel position to grid coordinate
+        Vector2Int cell = DetectionToGridCell(prediction.x, prediction.y, width, height);
+
+        // Convert to UI anchored position (local coordinates relative to parent)
+        Vector2 anchoredPos = GridToAnchoredPosition(cell.x, cell.y, cellSize);
+
+        if (pieceSpriteMap.TryGetValue(prediction.name, out Sprite sprite))
+        {
+            GameObject piece = Instantiate(piecePrefab, parent);
+
+            var chessPiece = piece.GetComponent<ChessPiece>();
+            chessPiece.gridPos = cell;
+
+            RectTransform rect = piece.GetComponent<RectTransform>();
+            rect.anchoredPosition = anchoredPos;
+            rect.sizeDelta = new Vector2(cellSize, cellSize) * 0.8f;
+
+            piece.GetComponent<Image>().sprite = sprite;
         }
         else
         {
@@ -119,10 +146,10 @@ public class ChessSpawner : Singleton<ChessSpawner>
     /// <summary>
     /// Converts prediction (x,y) to 8x8 grid coordinates (0,0) top-left.
     /// </summary>
-    private Vector2Int DetectionToGridCell(float x, float y)
+    private Vector2Int DetectionToGridCell(float x, float y, int width, int height)
     {
-        int col = Mathf.FloorToInt(x / (imageWidth / gridSize));
-        int row = Mathf.FloorToInt(y / (imageHeight / gridSize)); // Flip Y axis
+        int col = Mathf.FloorToInt(x / (width / gridSize));
+        int row = Mathf.FloorToInt(y / (height / gridSize)); // Flip Y axis
         return new Vector2Int(col, row);
     }
 

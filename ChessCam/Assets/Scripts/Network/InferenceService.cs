@@ -142,6 +142,8 @@ public class InferenceService : Singleton<InferenceService>
         List<IMultipartFormSection> formData = new List<IMultipartFormSection>
         {
             new MultipartFormDataSection("predictions", predictions),
+            new MultipartFormDataSection("image_width", image.width.ToString()),
+            new MultipartFormDataSection("image_height", image.height.ToString()),
             new MultipartFormDataSection("user_id", UserSession.userId.ToString())
         };
 
@@ -174,7 +176,6 @@ public class InferenceService : Singleton<InferenceService>
         if (request.result == UnityWebRequest.Result.Success)
         {
             ParseHistoryJson(request.downloadHandler.text);
-
         }
         else
         {
