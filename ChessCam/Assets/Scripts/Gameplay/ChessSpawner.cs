@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,7 +7,7 @@ public class ChessSpawner : Singleton<ChessSpawner>
 {
     [Header("Prefabs & Parents")]
     public GameObject piecePrefab; // Should have RectTransform + Image
-    public GameObject parent;      // UI Panel (RectTransform)
+    public Transform pieceParent;      // UI Panel (RectTransform)
 
     [Header("Piece Sprites")]
     public Sprite whiteKingPrefab;
@@ -34,10 +35,8 @@ public class ChessSpawner : Singleton<ChessSpawner>
     public bool isBoardFlip = false;
 
     // Constants
-    private const int GridSize = 8;
-    private const float CellSize = 100f;
-    private const float BoardUIOriginX = -350f; // Top-left corner X in anchored space
-    private const float BoardUIOriginY = 350f;  // Top-left corner Y in anchored space
+    private const int gridSize = 8;
+    private const float cellSize = 100;
 
     private Dictionary<string, Sprite> pieceSpriteMap;
 
@@ -60,26 +59,26 @@ public class ChessSpawner : Singleton<ChessSpawner>
         };
     }
 
-    public void SpawnPieceFromDetection(Prediction prediction)
+    public void SpawnPieceFromDetection(Prediction prediction, Transform parent, float cellSize)
     {
         // Convert pixel position to grid coordinate
         Vector2Int cell = DetectionToGridCell(prediction.x, prediction.y);
 
         // Convert to UI anchored position (local coordinates relative to parent)
-        Vector2 anchoredPos = GridToAnchoredPosition(cell.x, cell.y);
-
-        Debug.Log($"Box: ({prediction.x}, {prediction.y}), Spawn: {prediction.name} at cell {cell}, AnchoredPos {anchoredPos}");
+        Vector2 anchoredPos = GridToAnchoredPosition(cell.x, cell.y, cellSize);
 
         if (pieceSpriteMap.TryGetValue(prediction.name, out Sprite sprite))
         {
-            GameObject piece = Instantiate(piecePrefab, parent.transform);
+            GameObject piece = Instantiate(piecePrefab, parent);
 
             var chessPiece = piece.GetComponent<ChessPiece>();
             chessPiece.pieceType = prediction.name;
             chessPiece.gridPos = cell;
 
-            var rt = piece.GetComponent<RectTransform>();
-            rt.anchoredPosition = anchoredPos;
+            RectTransform rect = piece.GetComponent<RectTransform>();
+            rect.anchoredPosition = anchoredPos;
+            rect.sizeDelta = new Vector2(cellSize, cellSize) * 0.8f;
+
             piece.GetComponent<Image>().sprite = sprite;
 
             boardMap[cell] = chessPiece;
@@ -95,15 +94,16 @@ public class ChessSpawner : Singleton<ChessSpawner>
         imageWidth = InferenceService.Instance.GetImageWidth();
         imageHeight = InferenceService.Instance.GetImageHeight();
 
-        foreach (var pred in InferenceService.Instance.result.predictions)
+        foreach (var pred in InferenceService.Instance.inferenceResult.predictions)
         {
-            SpawnPieceFromDetection(pred);
+            SpawnPieceFromDetection(pred, pieceParent, cellSize);
         }
+        GameManager.Instance.UpdatePieceInteractivity();
     }
 
     public void ClearBoard()
     {
-        foreach (Transform child in parent.transform)
+        foreach (Transform child in pieceParent)
         {
             Destroy(child.gameObject);
         }
@@ -117,12 +117,12 @@ public class ChessSpawner : Singleton<ChessSpawner>
 
 
     /// <summary>
-    /// Converts Roboflow's prediction (x,y in pixel space) to 8x8 grid coordinates (0,0) top-left.
+    /// Converts prediction (x,y) to 8x8 grid coordinates (0,0) top-left.
     /// </summary>
     private Vector2Int DetectionToGridCell(float x, float y)
     {
-        int col = Mathf.FloorToInt(x / (imageWidth / GridSize));
-        int row = Mathf.FloorToInt(y / (imageHeight / GridSize)); // Flip Y axis
+        int col = Mathf.FloorToInt(x / (imageWidth / gridSize));
+        int row = Mathf.FloorToInt(y / (imageHeight / gridSize)); // Flip Y axis
         return new Vector2Int(col, row);
     }
 
@@ -130,10 +130,10 @@ public class ChessSpawner : Singleton<ChessSpawner>
     /// <summary>
     /// Converts 8x8 grid coordinate to UI anchored position relative to parent RectTransform.
     /// </summary>
-    private Vector2 GridToAnchoredPosition(int col, int row)
+    private Vector2 GridToAnchoredPosition(int col, int row, float cellSize)
     {
-        float posX = BoardUIOriginX + col * CellSize;
-        float posY = BoardUIOriginY - row * CellSize;
+        float posX = -cellSize * 3.5f + col * cellSize;
+        float posY = cellSize * 3.5f - row * cellSize;
         return new Vector2(posX, posY);
     }
 
@@ -141,10 +141,10 @@ public class ChessSpawner : Singleton<ChessSpawner>
     /// <summary>
     /// Converts 8x8 grid coordinate to UI anchored position relative to parent RectTransform.
     /// </summary>
-    public Vector2 GridToAnchoredPosition(Vector2Int pos)
+    public Vector2 GridToAnchoredPosition(Vector2Int pos, float cellSize = 100f)
     {
-        float posX = BoardUIOriginX + pos.x * CellSize;
-        float posY = BoardUIOriginY - pos.y * CellSize;
+        float posX = -cellSize * 3.5f + pos.x * cellSize;
+        float posY = cellSize * 3.5f - pos.y * cellSize;
         return new Vector2(posX, posY);
     }
 

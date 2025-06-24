@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+
 [System.Serializable]
 public class InferenceResponse
 {
@@ -11,4 +15,31 @@ public class Prediction
     public float x;
     public float y;
     public float confidence;
+}
+
+[Serializable]
+public class HistoryResponse
+{
+    public List<InferenceHistoryItem> history;
+}
+
+[Serializable]
+public class InferenceHistoryItem
+{
+    public int id;
+    public string predictions;
+    public string created_at;
+    public int user_id;
+
+    public List<Prediction> GetParsedPredictions()
+    {
+        string wrapped = $"{{\"items\":{predictions}}}";
+        return JsonUtility.FromJson<PredictionWrapper>(wrapped).items;
+    }
+
+    [Serializable]
+    private class PredictionWrapper
+    {
+        public List<Prediction> items;
+    }
 }

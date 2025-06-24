@@ -35,6 +35,7 @@ public class GameManager : Singleton<GameManager>
         {
             turnToggles[1].isOn = true;
         }
+        UpdatePieceInteractivity();
     }
 
     public void HandleMove(string pieceType)
@@ -66,8 +67,8 @@ public class GameManager : Singleton<GameManager>
         var validMoves = piece.GetValidMoves();
         foreach (var move in validMoves)
         {
-            Vector2 anchoredPos = ChessSpawner.Instance.GridToAnchoredPosition(move);
-            GameObject dot = Instantiate(moveDotPrefab, ChessSpawner.Instance.parent.transform);
+            Vector2 anchoredPos = ChessSpawner.Instance.GridToAnchoredPosition(move, 100f);
+            GameObject dot = Instantiate(moveDotPrefab, ChessSpawner.Instance.pieceParent);
             dot.GetComponent<RectTransform>().anchoredPosition = anchoredPos;
             moveDots.Add(dot);
         }
@@ -80,6 +81,22 @@ public class GameManager : Singleton<GameManager>
             Destroy(dot);
         }
         moveDots.Clear();
+    }
+
+    public void UpdatePieceInteractivity()
+    {
+        foreach (var kvp in ChessSpawner.Instance.boardMap)
+        {
+            ChessPiece piece = kvp.Value;
+            CanvasGroup group = piece.GetComponent<CanvasGroup>();
+
+            if (group == null) continue;
+
+            bool isWhite = piece.IsWhite();
+            bool isTurn = (currentTurn == PlayerTurn.White && isWhite) || (currentTurn == PlayerTurn.Black && !isWhite);
+
+            group.blocksRaycasts = isTurn;
+        }
     }
 }
 

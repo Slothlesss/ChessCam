@@ -19,14 +19,30 @@ public class ChessPiece : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        GameManager.Instance.ClearMoveDots();
+        if (!GameManager.Instance.IsTurnFor(pieceType))
+        {
+            NotificationUI.Instance.ShowMessage("Not your turn", true);
+            return;
+        }
         if (selectedPiece == null)
         {
             selectedPiece = this;
+            GameManager.Instance.ShowValidMoves(this);
         }
+        else
+        {
+            if (selectedPiece == this)
+            {
+                selectedPiece = null;
+                GameManager.Instance.ClearMoveDots();
+                return;
+            }
 
-        selectedPiece = this;
-        GameManager.Instance.ShowValidMoves(this);
+            // Select new piece
+            selectedPiece = this;
+            GameManager.Instance.ClearMoveDots();
+            GameManager.Instance.ShowValidMoves(this);
+        }
     }
 
     public bool IsValidMove(Vector2Int from, Vector2Int to)

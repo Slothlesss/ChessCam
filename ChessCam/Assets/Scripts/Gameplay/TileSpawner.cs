@@ -1,22 +1,19 @@
 using UnityEngine;
 
-public class TileSpawner : MonoBehaviour
+public class TileSpawner : Singleton<TileSpawner>
 {
     public GameObject tileWhitePrefab;   // Assign the Tile prefab in inspector
     public GameObject tileBlackPrefab;   // Assign the Tile prefab in inspector
     public GameObject parent;       // The parent UI object with a RectTransform (e.g., an empty GameObject under Canvas)
 
     private const int GridSize = 8;
-    private const float CellSize = 100f;
-    private const float StartX = -350f;
-    private const float StartY = 350f;
 
     void Start()
     {
-        SpawnTiles();
+        SpawnTiles(parent, 100f);
     }
 
-    void SpawnTiles()
+    public void SpawnTiles(GameObject parent, float cellSize)
     {
         for (int row = 0; row < GridSize; row++)
         {
@@ -29,9 +26,13 @@ public class TileSpawner : MonoBehaviour
                 tile.GetComponent<ChessTile>().gridPos = new Vector2Int(col, row); // FIXED: use (col, row)
 
                 RectTransform rect = tile.GetComponent<RectTransform>();
-                float x = StartX + col * CellSize;
-                float y = StartY - row * CellSize;
+                float startX = -cellSize * 3.5f;
+                float startY = cellSize * 3.5f;
+
+                float x = startX + col * cellSize;
+                float y = startY - row * cellSize;
                 rect.anchoredPosition = new Vector2(x, y);
+                rect.sizeDelta = new Vector2(cellSize, cellSize);
             }
         }
     }

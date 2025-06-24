@@ -12,13 +12,16 @@ public class InferenceService : Singleton<InferenceService>
 {
     [SerializeField] private Texture2D image;
 
-    public InferenceResponse result;
+    public InferenceResponse inferenceResult;
+    public HistoryResponse historyResult;
+    public string predictions;
 
 #if UNITY_WEBGL && !UNITY_EDITOR
     [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern void UploadFile();
 #endif
-
+    
+    // ========== Button Functions ==========
     public void PickImage()
     {
 #if UNITY_WEBGL && !UNITY_EDITOR
@@ -33,7 +36,23 @@ public class InferenceService : Singleton<InferenceService>
         }
 #endif
     }
+    public void Inference()
+    {
+        StartCoroutine(SendImageForInference());
+    }
 
+    public void Save()
+    {
+        StartCoroutine(SaveInferenceData());
+    }
+
+    public void GetHistory()
+    {
+        StartCoroutine(GetInferenceHistory());
+    }
+
+
+    // ========== End: Button Functions ==========
 
     private IEnumerator LoadTextureFromPath(string path)
     {
@@ -52,12 +71,8 @@ public class InferenceService : Singleton<InferenceService>
             }
         }
     }
-    public void Inference()
-    {
-        StartCoroutine(SendImageForInference());
-    }
 
-    IEnumerator SendImageForInference(int maxRetries = 3, float retryDelay = 1f)
+    IEnumerator SendImageForInference()
     {
         byte[] imageBytes = image.EncodeToJPG();
 
@@ -68,12 +83,14 @@ public class InferenceService : Singleton<InferenceService>
 
         int attempt = 0;
         bool success = false;
+        int maxRetries = 3;
+        float retryDelay = 1f;
 
         while (attempt < maxRetries && !success)
         {
             attempt++;
 
-            UnityWebRequest request = UnityWebRequest.Post(APIConfig.Inference.DetectEndpoint, formData);
+            UnityWebRequest request = UnityWebRequest.Post(APIConfig.Inference.Detect, formData);
             request.SetRequestHeader("Accept", "application/json");
 
             NotificationUI.Instance.StartLoadingMessage("Requesting");
@@ -83,11 +100,10 @@ public class InferenceService : Singleton<InferenceService>
             if (request.result == UnityWebRequest.Result.Success)
             {
                 success = true;
-
-                string wrappedJson = "{\"predictions\":" + request.downloadHandler.text + "}";
-
-                result = JsonUtility.FromJson<InferenceResponse>(wrappedJson);
-                result.predictions = result.predictions
+                predictions = request.downloadHandler.text;
+                var wrappedJson = "{\"predictions\":" + request.downloadHandler.text + "}";
+                inferenceResult = JsonUtility.FromJson<InferenceResponse>(wrappedJson);
+                inferenceResult.predictions = inferenceResult.predictions
                     .Where(pred => pred.confidence >= 0.8f)
                     .ToArray();
 
@@ -116,6 +132,67 @@ public class InferenceService : Singleton<InferenceService>
         NotificationUI.Instance.ShowMessage("Server errors. Please try again later.", true);
     }
 
+    public IEnumerator SaveInferenceData()
+    {
+        // Save screenshot
+        Texture2D screenshot = image;
+        byte[] imageBytes = screenshot.EncodeToPNG(); // or EncodeToJPG
+
+
+        List<IMultipartFormSection> formData = new List<IMultipartFormSection>
+        {
+            new MultipartFormDataSection("predictions", predictions),
+            new MultipartFormDataSection("user_id", UserSession.userId.ToString())
+        };
+
+        string url = $"{APIConfig.Inference.Save}";
+        UnityWebRequest request = UnityWebRequest.Post(url, formData);
+        request.SetRequestHeader("Accept", "application/json");
+
+        yield return request.SendWebRequest();
+
+        if (request.result == UnityWebRequest.Result.Success)
+        {
+            Debug.Log("Inference saved successfully: " + request.downloadHandler.text);
+        }
+        else
+        {
+            Debug.LogError("Upload failed: " + request.error);
+            Debug.LogError("Server response: " + request.downloadHandler.text);
+        }
+    }
+
+
+    public IEnumerator GetInferenceHistory()
+    {
+        string url = $"{APIConfig.Inference.History}?user_id={UnityWebRequest.EscapeURL(UserSession.userId.ToString())}";
+        UnityWebRequest request = UnityWebRequest.Get(url);
+        request.SetRequestHeader("Accept", "application/json");
+
+        yield return request.SendWebRequest();
+
+        if (request.result == UnityWebRequest.Result.Success)
+        {
+            ParseHistoryJson(request.downloadHandler.text);
+
+        }
+        else
+        {
+            Debug.LogError("Upload failed: " + request.error);
+            Debug.LogError("Server response: " + request.downloadHandler.text);
+        }
+    }
+    private void ParseHistoryJson(string json)
+    {
+        historyResult = JsonUtility.FromJson<HistoryResponse>(json);
+
+        foreach (var item in historyResult.history)
+        {
+            List<Prediction> preds = item.GetParsedPredictions();
+
+            Debug.Log($"Inference #{item.id} with {preds.Count} predictions at {item.created_at}");
+        }
+    }
 
     public void ReceiveImageData(string base64)
     {

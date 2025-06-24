@@ -46,6 +46,9 @@ public static class UserService
             if (request.result == UnityWebRequest.Result.Success)
             {
                 Debug.Log("Success: " + request.downloadHandler.text);
+                LoginResponse response = JsonUtility.FromJson<LoginResponse>(request.downloadHandler.text);
+                UserSession.userId = response.id;
+
                 NotificationUI.Instance.ShowMessage("Login Success", false);
                 SceneManager.LoadScene("Gameplay");
             }

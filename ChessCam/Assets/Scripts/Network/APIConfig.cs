@@ -15,6 +15,8 @@ public static class APIConfig
     }
     public static class Inference
     {
-        public static string DetectEndpoint => $"{BaseUrl}/detect";
+        public static string Detect => $"{BaseUrl}/inferences/detect";
+        public static string Save => $"{BaseUrl}/inferences/save";
+        public static string History => $"{BaseUrl}/inferences/history";
     }
 }

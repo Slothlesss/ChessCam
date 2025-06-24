@@ -10,13 +10,6 @@ public class ChessTile : MonoBehaviour, IPointerClickHandler
         ChessPiece selected = ChessPiece.selectedPiece;
         if (selected == null) return;
 
-        if (!GameManager.Instance.IsTurnFor(selected.pieceType))
-        {
-            PlayerTurn notTurn = GameManager.Instance.currentTurn == PlayerTurn.White? PlayerTurn.Black : PlayerTurn.White;
-            NotificationUI.Instance.ShowMessage($"Not {notTurn} turn", true);
-            return;
-        }
-
         if (!selected.IsValidMove(selected.gridPos, gridPos))
         {
             ChessPiece.selectedPiece = null;
@@ -74,7 +67,7 @@ public class ChessTile : MonoBehaviour, IPointerClickHandler
 
         GameManager.Instance.HandleMove(selected.pieceType);
         ChessPiece.selectedPiece = null;
-
         GameManager.Instance.ClearMoveDots();
     }
+
 }
