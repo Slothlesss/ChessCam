@@ -102,6 +102,7 @@ public class InferenceService : Singleton<InferenceService>
                 inferenceResult = JsonUtility.FromJson<InferenceResponse>(result);
                 if (inferenceResult.num_inf >= 3)
                 {
+                    Debug.Log(result);
                     NotificationUI.Instance.ShowMessage("You have reached your daily inference limit", true);
                 }
                 else
@@ -146,7 +147,6 @@ public class InferenceService : Singleton<InferenceService>
 
         if (request.result == UnityWebRequest.Result.Success)
         {
-            Debug.LogError("History: " + request.downloadHandler.text);
             ParseHistoryJson(request.downloadHandler.text);
         }
         else

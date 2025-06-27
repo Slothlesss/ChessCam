@@ -12,13 +12,14 @@ public enum PlayerTurn
 public class GameManager : Singleton<GameManager>
 {
     public PlayerTurn currentTurn;
-    public Toggle[] turnToggles; 
+    public Toggle[] turnToggles;
 
-    public GameObject highlightPrefab;
-
-
+    [Header("Tile Highlights")]
     public GameObject moveDotPrefab;
+    public GameObject capturablePrefab;
+
     private List<GameObject> moveDots = new List<GameObject>();
+    private List<GameObject> capturables = new List<GameObject>();
     private void Start()
     {
         currentTurn = PlayerTurn.White;
@@ -68,10 +69,30 @@ public class GameManager : Singleton<GameManager>
         var validMoves = piece.GetValidMoves();
         foreach (var move in validMoves)
         {
-            Vector2 anchoredPos = ChessSpawner.Instance.GridToAnchoredPosition(move, 100f);
-            GameObject dot = Instantiate(moveDotPrefab, ChessSpawner.Instance.pieceParent);
-            dot.GetComponent<RectTransform>().anchoredPosition = anchoredPos;
-            moveDots.Add(dot);
+            if (!piece.IsEnemyAt(move))
+            {
+                Vector2 anchoredPos = ChessSpawner.Instance.GridToAnchoredPosition(move, 100f);
+                GameObject dot = Instantiate(moveDotPrefab, ChessSpawner.Instance.pieceParent);
+                dot.GetComponent<RectTransform>().anchoredPosition = anchoredPos;
+                moveDots.Add(dot);
+            }
+        }
+        ShowCapturableEnemies(piece);
+    }
+
+
+    public void ShowCapturableEnemies(ChessPiece piece)
+    {
+        var validMoves = piece.GetValidMoves();
+        foreach (var move in validMoves)
+        {
+            if (piece.IsEnemyAt(move))
+            {
+                Vector2 anchoredPos = ChessSpawner.Instance.GridToAnchoredPosition(move, 100f);
+                GameObject cap = Instantiate(capturablePrefab, TileSpawner.Instance.tileParent.transform);
+                cap.GetComponent<RectTransform>().anchoredPosition = anchoredPos;
+                capturables.Add(cap);
+            }
         }
     }
 
@@ -81,7 +102,16 @@ public class GameManager : Singleton<GameManager>
         {
             Destroy(dot);
         }
-        moveDots.Clear();
+        moveDots.Clear(); 
+        ClearCapturables();
+    }
+    public void ClearCapturables()
+    {
+        foreach (var cap in capturables)
+        {
+            Destroy(cap);
+        }
+        capturables.Clear();
     }
 }
 

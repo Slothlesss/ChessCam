@@ -1533,8 +1533,8 @@ MonoBehaviour:
   turnToggles:
   - {fileID: 2035045014}
   - {fileID: 996369186}
-  highlightPrefab: {fileID: 1193105786161777706, guid: e3210b49094c5b14db5c92509d3fb6e5, type: 3}
   moveDotPrefab: {fileID: 410269441302320749, guid: 68ca2bdd57df2db43a536f1523da349a, type: 3}
+  capturablePrefab: {fileID: 510907883318662633, guid: eca2e2a78bce2ea409827d214204c4ce, type: 3}
 --- !u!1 &753667974
 GameObject:
   m_ObjectHideFlags: 0
@@ -4853,7 +4853,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tileWhitePrefab: {fileID: 510907883318662633, guid: 79bd6ebcff647bd429e77fcf67bda234, type: 3}
   tileBlackPrefab: {fileID: 510907883318662633, guid: 06e620c4b70bac248963c507748f368d, type: 3}
-  parent: {fileID: 1086089406}
+  tileParent: {fileID: 1086089406}
 --- !u!4 &1974667479
 Transform:
   m_ObjectHideFlags: 0

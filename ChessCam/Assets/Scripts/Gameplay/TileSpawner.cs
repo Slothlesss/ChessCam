@@ -5,7 +5,7 @@ public class TileSpawner : Singleton<TileSpawner>
 {
     public GameObject tileWhitePrefab;   // Assign the Tile prefab in inspector
     public GameObject tileBlackPrefab;   // Assign the Tile prefab in inspector
-    public GameObject parent;       // The parent UI object with a RectTransform (e.g., an empty GameObject under Canvas)
+    public GameObject tileParent;       // The parent UI object with a RectTransform (e.g., an empty GameObject under Canvas)
 
     private const int GridSize = 8;
 
@@ -13,7 +13,7 @@ public class TileSpawner : Singleton<TileSpawner>
 
     void Start()
     {
-        SpawnTiles(parent, 100f);
+        SpawnTiles(tileParent, 100f);
     }
 
     public void SpawnTiles(GameObject parent, float cellSize)

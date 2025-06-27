@@ -32,7 +32,7 @@ public class ChessPiece : MonoBehaviour, IPointerClickHandler
         {
             var board = ChessSpawner.Instance.boardMap;
             // Capture
-            if (selectedPiece != null && IsEnemyAt(gridPos, selectedPiece.IsWhite()) && selectedPiece.IsValidMove(selectedPiece.gridPos, gridPos))
+            if (selectedPiece != null && selectedPiece.IsEnemyAt(gridPos) && selectedPiece.IsValidMove(selectedPiece.gridPos, gridPos))
             {
                 Debug.Log("3");
                 Destroy(this.gameObject);
@@ -66,6 +66,7 @@ public class ChessPiece : MonoBehaviour, IPointerClickHandler
             {
                 Debug.Log("2");
                 selectedPiece = null;
+                targetTile.HighlightTile(false);
                 GameManager.Instance.ClearMoveDots();
                 return;
             }
@@ -90,12 +91,12 @@ public class ChessPiece : MonoBehaviour, IPointerClickHandler
 
         List<Vector2Int> validMoves = typeOnly switch
         {
-            "knight" => ChessRules.GetKnightMoves(gridPos, IsSquareOccupied, pos => IsEnemyAt(pos, IsWhite())),
-            "king" => ChessRules.GetKingMovesWithCastling(gridPos, IsWhite(), hasMoved, IsSquareOccupied, pos => IsEnemyAt(pos, IsWhite())),
-            "rook" => ChessRules.GetRookMoves(gridPos, IsSquareOccupied, pos => IsEnemyAt(pos, IsWhite())),
-            "bishop" => ChessRules.GetBishopMoves(gridPos, IsSquareOccupied, pos => IsEnemyAt(pos, IsWhite())),
-            "queen" => ChessRules.GetQueenMoves(gridPos, IsSquareOccupied, pos => IsEnemyAt(pos, IsWhite())),
-            "pawn" => ChessRules.GetPawnMoves(gridPos, IsWhite(), IsSquareOccupied, pos => IsEnemyAt(pos, IsWhite())),
+            "knight" => ChessRules.GetKnightMoves(gridPos, IsSquareOccupied, pos => IsEnemyAt(pos)),
+            "king" => ChessRules.GetKingMovesWithCastling(gridPos, IsWhite(), hasMoved, IsSquareOccupied, pos => IsEnemyAt(pos)),
+            "rook" => ChessRules.GetRookMoves(gridPos, IsSquareOccupied, pos => IsEnemyAt(pos)),
+            "bishop" => ChessRules.GetBishopMoves(gridPos, IsSquareOccupied, pos => IsEnemyAt(pos)),
+            "queen" => ChessRules.GetQueenMoves(gridPos, IsSquareOccupied, pos => IsEnemyAt(pos)),
+            "pawn" => ChessRules.GetPawnMoves(gridPos, IsWhite(), IsSquareOccupied, pos => IsEnemyAt(pos)),
             _ => null
         };
         return validMoves;
@@ -105,10 +106,10 @@ public class ChessPiece : MonoBehaviour, IPointerClickHandler
 
     private bool IsSquareOccupied(Vector2Int pos) => ChessSpawner.Instance.boardMap.ContainsKey(pos);
 
-    public bool IsEnemyAt(Vector2Int pos, bool isWhite)
+    public bool IsEnemyAt(Vector2Int pos)
     {
         if (ChessSpawner.Instance.boardMap.TryGetValue(pos, out ChessPiece piece))
-            return piece.IsWhite() != isWhite;
+            return piece.IsWhite() != IsWhite();
         return false;
     }
 
