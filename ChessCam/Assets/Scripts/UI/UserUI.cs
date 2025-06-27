@@ -4,10 +4,14 @@ using UnityEngine.UI;
 
 public class UserUI : MonoBehaviour
 {
-    [Header("Input Fields")]
-    public TMP_InputField usernameInput;
-    public TMP_InputField passwordInput;
+    [Header("Register Input Fields")]
+    public TMP_InputField usernameRegisterInput;
+    public TMP_InputField passwordRegisterInput;
     public TMP_InputField confirmPasswordInput;
+
+    [Header("Login Input Fields")]
+    public TMP_InputField usernameLoginInput;
+    public TMP_InputField passwordLoginInput;
 
     [Header("Buttons")]
     public Button registerButton;
@@ -21,8 +25,8 @@ public class UserUI : MonoBehaviour
 
     private void OnRegisterClicked()
     {
-        string username = usernameInput.text;
-        string password = passwordInput.text;
+        string username = usernameRegisterInput.text;
+        string password = passwordRegisterInput.text;
         string confirmPassword = confirmPasswordInput.text;
 
         if (password != confirmPassword)
@@ -30,15 +34,13 @@ public class UserUI : MonoBehaviour
             NotificationUI.Instance.ShowMessage("Passwords do not match", true);
             return;
         }
-
         StartCoroutine(UserService.RegisterUser(username, password));
     }
 
     private void OnLoginClicked()
     {
-        string username = usernameInput.text;
-        string password = passwordInput.text;
-
+        string username = usernameLoginInput.text;
+        string password = passwordLoginInput.text;
         StartCoroutine(UserService.LoginUser(username, password));
     }
 }

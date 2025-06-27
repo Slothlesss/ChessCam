@@ -5,6 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public class InferenceResponse
 {
+    public int num_inf;
     public Prediction[] predictions;
 }
 

@@ -8,7 +8,7 @@ mergeInto(LibraryManager.library, {
       var reader = new FileReader();
       reader.onload = function (event) {
         var base64Data = event.target.result;
-        SendMessage('InferenceManager', 'ReceiveImageData', base64Data);
+        SendMessage('InferenceService', 'ReceiveImageData', base64Data);
       };
       reader.readAsDataURL(file);
     };

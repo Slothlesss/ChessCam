@@ -59,17 +59,17 @@ public class ChessSpawner : Singleton<ChessSpawner>
         };
     }
 
-    public void SpawnPieceFromDetection(Prediction prediction, Transform parent, float cellSize)
+    public void SpawnPieceFromDetection(Prediction prediction, float cellSize, int width, int height)
     {
         // Convert pixel position to grid coordinate
-        Vector2Int cell = DetectionToGridCell(prediction.x, prediction.y, imageWidth, imageHeight);
+        Vector2Int cell = DetectionToGridCell(prediction.x, prediction.y, width, height);
 
         // Convert to UI anchored position (local coordinates relative to parent)
         Vector2 anchoredPos = GridToAnchoredPosition(cell.x, cell.y, cellSize);
 
         if (pieceSpriteMap.TryGetValue(prediction.name, out Sprite sprite))
         {
-            GameObject piece = Instantiate(piecePrefab, parent);
+            GameObject piece = Instantiate(piecePrefab, pieceParent);
 
             var chessPiece = piece.GetComponent<ChessPiece>();
             chessPiece.pieceType = prediction.name;
@@ -123,7 +123,7 @@ public class ChessSpawner : Singleton<ChessSpawner>
 
         foreach (var pred in InferenceService.Instance.inferenceResult.predictions)
         {
-            SpawnPieceFromDetection(pred, pieceParent, cellSize);
+            SpawnPieceFromDetection(pred, cellSize, imageWidth, imageHeight);
         }
         GameManager.Instance.UpdatePieceInteractivity();
     }

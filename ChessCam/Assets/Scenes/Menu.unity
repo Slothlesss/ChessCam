@@ -166,9 +166,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 045c6f4b8db5d2b43a0fc85e018da772, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  usernameInput: {fileID: 284008701}
-  passwordInput: {fileID: 118249341}
+  usernameRegisterInput: {fileID: 284008701}
+  passwordRegisterInput: {fileID: 118249341}
   confirmPasswordInput: {fileID: 358503872}
+  usernameLoginInput: {fileID: 1615970242}
+  passwordLoginInput: {fileID: 348709579}
   registerButton: {fileID: 613481389}
   loginButton: {fileID: 1536267314}
 --- !u!1 &36594224
@@ -937,10 +939,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
