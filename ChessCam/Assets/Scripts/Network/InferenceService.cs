@@ -100,11 +100,18 @@ public class InferenceService : Singleton<InferenceService>
                 string result = request.downloadHandler.text;
 
                 inferenceResult = JsonUtility.FromJson<InferenceResponse>(result);
-                inferenceResult.predictions = inferenceResult.predictions
-                    .Where(pred => pred.confidence >= 0.8f)
-                    .ToArray();
+                if (inferenceResult.num_inf >= 3)
+                {
+                    NotificationUI.Instance.ShowMessage("You have reached your daily inference limit", true);
+                }
+                else
+                {
+                    inferenceResult.predictions = inferenceResult.predictions
+                        .Where(pred => pred.confidence >= 0.8f)
+                        .ToArray();
 
-                NotificationUI.Instance.ShowMessage("Successfully inference. You can spawn now.", false);
+                    NotificationUI.Instance.ShowMessage("Successfully inference. You can spawn now.", false);
+                }
             }
             else
             {

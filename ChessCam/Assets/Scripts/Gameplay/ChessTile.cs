@@ -1,9 +1,25 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class ChessTile : MonoBehaviour, IPointerClickHandler
 {
     public Vector2Int gridPos;
+    public GameObject highlight;
+    public static ChessTile selectedTile;
+
+    public void HighlightTile(bool isHighlighted)
+    {
+        if (selectedTile != null)
+        {
+            selectedTile.highlight.SetActive(false);
+        }
+        selectedTile = this;
+        if (highlight != null)
+        {
+            highlight.SetActive(isHighlighted);
+        }
+    }
 
     public void OnPointerClick(PointerEventData eventData)
     {
@@ -13,26 +29,11 @@ public class ChessTile : MonoBehaviour, IPointerClickHandler
         if (!selected.IsValidMove(selected.gridPos, gridPos))
         {
             ChessPiece.selectedPiece = null;
+            GameManager.Instance.ClearMoveDots();
             return;
         }
 
         var board = ChessSpawner.Instance.boardMap;
-
-        // Capture
-        if (board.TryGetValue(gridPos, out ChessPiece targetPiece))
-        {
-            if (selected.IsEnemyAt(gridPos, selected.IsWhite()))
-            {
-                Destroy(targetPiece.gameObject);
-                board.Remove(gridPos);
-            }
-            else
-            {
-                NotificationUI.Instance.ShowMessage("Tile occupied by ally", true);
-                ChessPiece.selectedPiece = null;
-                return;
-            }
-        }
 
         // Castling
         if (selected.pieceType.Contains("king") && gridPos.y == selected.gridPos.y && Mathf.Abs(gridPos.x - selected.gridPos.x) == 2)

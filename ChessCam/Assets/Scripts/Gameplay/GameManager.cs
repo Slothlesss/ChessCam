@@ -12,7 +12,9 @@ public enum PlayerTurn
 public class GameManager : Singleton<GameManager>
 {
     public PlayerTurn currentTurn;
-    public Toggle[] turnToggles;
+    public Toggle[] turnToggles; 
+
+    public GameObject highlightPrefab;
 
 
     public GameObject moveDotPrefab;
@@ -35,7 +37,6 @@ public class GameManager : Singleton<GameManager>
         {
             turnToggles[1].isOn = true;
         }
-        UpdatePieceInteractivity();
     }
 
     public void HandleMove(string pieceType)
@@ -81,22 +82,6 @@ public class GameManager : Singleton<GameManager>
             Destroy(dot);
         }
         moveDots.Clear();
-    }
-
-    public void UpdatePieceInteractivity()
-    {
-        foreach (var kvp in ChessSpawner.Instance.boardMap)
-        {
-            ChessPiece piece = kvp.Value;
-            CanvasGroup group = piece.GetComponent<CanvasGroup>();
-
-            if (group == null) continue;
-
-            bool isWhite = piece.IsWhite();
-            bool isTurn = (currentTurn == PlayerTurn.White && isWhite) || (currentTurn == PlayerTurn.Black && !isWhite);
-
-            group.blocksRaycasts = isTurn;
-        }
     }
 }
 

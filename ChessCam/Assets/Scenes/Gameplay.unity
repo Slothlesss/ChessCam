@@ -1533,6 +1533,7 @@ MonoBehaviour:
   turnToggles:
   - {fileID: 2035045014}
   - {fileID: 996369186}
+  highlightPrefab: {fileID: 1193105786161777706, guid: e3210b49094c5b14db5c92509d3fb6e5, type: 3}
   moveDotPrefab: {fileID: 410269441302320749, guid: 68ca2bdd57df2db43a536f1523da349a, type: 3}
 --- !u!1 &753667974
 GameObject:

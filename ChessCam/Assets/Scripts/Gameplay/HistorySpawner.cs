@@ -31,7 +31,7 @@ public class HistorySpawner : MonoBehaviour
         foreach (var item in historyItems)
         {
             GameObject tempBoard = Instantiate(boardPrefab, renderHolder);
-            TileSpawner.Instance.SpawnTiles(tempBoard, cellSize);
+            TileSpawner.Instance.SpawnTilesForThumbnails(tempBoard, cellSize);
             List<Prediction> preds = item.GetParsedPredictions();
             foreach (var pred in preds)
             {

@@ -19,25 +19,58 @@ public class ChessPiece : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
+        var tileMap = TileSpawner.Instance.tileMap;
+
+        //Highlight tile
+        if (tileMap.TryGetValue(gridPos, out ChessTile targetTile))
+        {
+            targetTile.HighlightTile(true);
+        }
+
+        //Check turn and capture
         if (!GameManager.Instance.IsTurnFor(pieceType))
         {
-            NotificationUI.Instance.ShowMessage("Not your turn", true);
+            var board = ChessSpawner.Instance.boardMap;
+            // Capture
+            if (selectedPiece != null && IsEnemyAt(gridPos, selectedPiece.IsWhite()) && selectedPiece.IsValidMove(selectedPiece.gridPos, gridPos))
+            {
+                Debug.Log("3");
+                Destroy(this.gameObject);
+                board.Remove(gridPos);
+
+                board.Remove(selectedPiece.gridPos);
+                board[gridPos] = selectedPiece;
+
+                selectedPiece.GetRectTransform().anchoredPosition = ChessSpawner.Instance.GridToAnchoredPosition(gridPos);
+                selectedPiece.gridPos = gridPos;
+                selectedPiece.hasMoved = true;
+                GameManager.Instance.HandleMove(selectedPiece.pieceType);
+            }
+
+            selectedPiece = null;
+            GameManager.Instance.ClearMoveDots();
             return;
         }
+
+        //Select piece
         if (selectedPiece == null)
         {
+            Debug.Log("1");
             selectedPiece = this;
             GameManager.Instance.ShowValidMoves(this);
         }
         else
         {
+            //Deselect same piece
             if (selectedPiece == this)
             {
+                Debug.Log("2");
                 selectedPiece = null;
                 GameManager.Instance.ClearMoveDots();
                 return;
             }
 
+            Debug.Log("4");
             // Select new piece
             selectedPiece = this;
             GameManager.Instance.ClearMoveDots();
@@ -47,8 +80,6 @@ public class ChessPiece : MonoBehaviour, IPointerClickHandler
 
     public bool IsValidMove(Vector2Int from, Vector2Int to)
     {
-        string typeOnly = pieceType.Contains('-') ? pieceType.Split('-')[1] : pieceType;
-
         List<Vector2Int> validMoves = GetValidMoves();
         return validMoves != null && validMoves.Contains(to);
     }

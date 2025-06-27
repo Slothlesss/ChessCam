@@ -125,7 +125,6 @@ public class ChessSpawner : Singleton<ChessSpawner>
         {
             SpawnPieceFromDetection(pred, cellSize, imageWidth, imageHeight);
         }
-        GameManager.Instance.UpdatePieceInteractivity();
     }
 
     public void ClearBoard()
