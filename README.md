@@ -1,6 +1,8 @@
+![release](https://img.shields.io/badge/release-v0.1.0-orange?style=flat-square)
 # ♟️ ChessCam 📸
 
 **ChessCam** is an chessboard recognition app that detects the positions of chess pieces from an image and recreates the board, allowing players to continue a gameplay.
+
 ![image](https://github.com/user-attachments/assets/39db63a6-d988-4326-8938-20e56a8a41dc)
 
 
@@ -30,7 +32,29 @@ Your username and password will be stored, and the password encrypted with Werkz
 - Each user will have 3 inference attempts per day (reset at 00:00 UTC time).
 - You can click to history image to spawn the board.
 
-## 3. Asset Attribution
+## 3. Deploy with Docker
+### 3.1 Install Docker
+Ensure you have [Docker](https://docs.docker.com/get-started/get-docker/) installed.
+
+### 3.2 Build Docker Image
+```
+cd Backend
+docker build -t chesscam-backend .
+```
+
+### 3.3 Run the container
+```
+docker run -d -p 8000:8000 chesscam-backend
+```
+
+### 3.4 Change BaseUrl
+- Open the file: `Assets/Script/Network/APIConfig.cs`
+- Update BaseUrl:
+```
+public static string BaseUrl = "http://localhost:8000";
+```
+
+## 4. Asset Attribution
 
 ### Chess Piece Assets
 - The chess piece images used in this project are sourced from [**Lichess**](https://lichess.org).
