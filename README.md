@@ -5,7 +5,13 @@
 
 
 ## 1. Playable version
-[![Try it here](https://img.shields.io/badge/Try%20it%20here-4CAF50?style=for-the-badge)](https://slothless.itch.io/chesscam)
+You can try the playable web build hosted on Itch.io:
+<p align="center">
+  <a href="https://slothless.itch.io/chesscam">
+    <img src="https://img.shields.io/badge/Try%20it%20here-4CAF50?style=for-the-badge" alt="Try it here">
+  </a>
+</p>
+
 
 ## 2. Instruction
 ### 2.1 Login and Registration
