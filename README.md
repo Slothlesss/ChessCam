@@ -15,7 +15,7 @@ You can try the playable web build hosted on Itch.io:
 </p>
 
 
-## 2. Instruction
+## 2. Instruction and Features
 ### 2.1 Login and Registration
 ![image](https://github.com/user-attachments/assets/d80a239e-3c9f-44a4-a4da-1bd231b3ce7a)
 Your username and password will be stored, and the password encrypted with Werkzerg.
