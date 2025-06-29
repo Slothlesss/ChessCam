@@ -2,7 +2,6 @@
 
 **ChessCam** is an chessboard recognition app that detects the positions of chess pieces from an image and recreates the board, allowing players to continue a gameplay.
 ![image](https://github.com/user-attachments/assets/39db63a6-d988-4326-8938-20e56a8a41dc)
-![image](https://github.com/user-attachments/assets/bf278c46-6c35-4c47-8a71-24c8b3292eec)
 
 
 ## 1. Playable version
@@ -21,6 +20,7 @@ Your username and password will be stored, and the password encrypted with Werkz
 => You can continue the gameplay now.
 
 ### 2.3 Inference History
+![image](https://github.com/user-attachments/assets/bf278c46-6c35-4c47-8a71-24c8b3292eec)
 - Each user will have 3 inference attempts per day (reset at 00:00 UTC time).
 - You can click to history image to spawn the board.
 
