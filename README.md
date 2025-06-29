@@ -47,7 +47,7 @@ docker build -t chesscam-backend .
 docker run -d -p 8000:8000 chesscam-backend
 ```
 
-### 3.4 Change BaseUrl
+### 3.4 Update BaseUrl
 - Open the file: `Assets/Script/Network/APIConfig.cs`
 - Update BaseUrl:
 ```
