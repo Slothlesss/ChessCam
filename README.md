@@ -30,7 +30,7 @@ Your username and password will be stored, and the password encrypted with Werkz
 - Each user will have 3 inference attempts per day (reset at 00:00 UTC time).
 - You can click to history image to spawn the board.
 
-## 4. Asset Attribution
+## 3. Asset Attribution
 
 ### Chess Piece Assets
 - The chess piece images used in this project are sourced from [**Lichess**](https://lichess.org).
