@@ -163,6 +163,83 @@ public static class ChessRules
         return moves;
     }
 
+    public static ChessPiece FindKing(bool isWhite)
+    {
+        foreach (var piece in ChessSpawner.Instance.boardMap.Values)
+        {
+            if (piece.pieceType == (isWhite ? "white-king" : "black-king"))
+                return piece;
+        }
+        return null;
+    }
+
+    public static bool IsKingInCheck(bool isWhite)
+    {
+        var board = ChessSpawner.Instance.boardMap;
+        ChessPiece king = FindKing(isWhite);
+        if (king == null) return false;
+
+        Vector2Int kingPos = king.gridPos;
+        foreach (var piece in board.Values)
+        {
+            if (piece.IsWhite() == isWhite) continue;
+            var moves = piece.GetValidMoves();
+            if (moves != null && moves.Contains(kingPos))
+            {
+                Debug.Log("Piece: " + piece.pieceType + " Pos: " + piece.gridPos);
+                return true;
+            }
+        }
+        return false;
+    }
+    public static bool IsCheckmate(bool isWhite)
+    {
+        var board = ChessSpawner.Instance.boardMap;
+        var copiedBoard = ChessSpawner.Instance.copiedBoardMap;
+        if (!IsKingInCheck(isWhite)) return false;
+
+        foreach (var piece in copiedBoard.Values)
+        {
+            if (piece.IsWhite() != isWhite) continue;
+            var validMoves = piece.GetValidMoves();
+            if (validMoves == null) continue;
+
+            Debug.Log("Stimulate piece: " + piece.pieceType + " Pos: " + piece.gridPos);
+
+            foreach (var move in validMoves)
+            {
+                ChessPiece capturedPiece = null;
+                Vector2Int from = piece.gridPos;
+                Vector2Int to = move;
+
+                Debug.Log("Stimulate piece: " + piece.pieceType + " Pos: " + piece.gridPos + " From: " + from + " To: " + to );
+                //Stimulate piece valid moves
+                if (board.TryGetValue(to, out capturedPiece))
+                    board.Remove(to);
+
+                board.Remove(from);
+                board[to] = piece;
+                piece.gridPos = to;
+
+                bool stillInCheck = IsKingInCheck(isWhite);
+
+                //Restore the board
+                board.Remove(to);
+                board[from] = piece;
+                piece.gridPos = from;
+                if (capturedPiece != null)
+                    board[to] = capturedPiece;
+
+                if (!stillInCheck)
+                {
+                    Debug.Log("No longer in check: Stoppable Piece: " + piece.pieceType + " Pos: " + piece.gridPos);
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
 
     private static bool IsInsideBoard(Vector2Int pos)
     {

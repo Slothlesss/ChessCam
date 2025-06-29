@@ -30,6 +30,7 @@ public class ChessSpawner : Singleton<ChessSpawner>
 
     [Header("Current Pieces")] 
     public Dictionary<Vector2Int, ChessPiece> boardMap = new Dictionary<Vector2Int, ChessPiece>();
+    public Dictionary<Vector2Int, ChessPiece> copiedBoardMap = new Dictionary<Vector2Int, ChessPiece>();
 
     [Header("Board State")]
     public bool isBoardFlip = false;
@@ -87,6 +88,7 @@ public class ChessSpawner : Singleton<ChessSpawner>
         {
             Debug.LogWarning($"No sprite assigned for class: {prediction.name}");
         }
+        copiedBoardMap = new Dictionary<Vector2Int, ChessPiece>(boardMap);
     }
 
     public void SpawnPiecesForThumbnail(Prediction prediction, Transform parent, float cellSize, int width, int height)

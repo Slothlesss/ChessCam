@@ -158,7 +158,19 @@ public class GameManager : Singleton<GameManager>
         currentTurn = currentTurn == PlayerTurn.White ? PlayerTurn.Black : PlayerTurn.White;
         selectedPiece = null;
         UpdateToggleUI();
+
+        bool isWhite = currentTurn == PlayerTurn.White;
+        ChessSpawner.Instance.copiedBoardMap = new Dictionary<Vector2Int, ChessPiece>(ChessSpawner.Instance.boardMap);
+        if (ChessRules.IsKingInCheck(isWhite))
+        {
+            Debug.Log($"{(isWhite ? "White" : "Black")} is in check!");
+            if (ChessRules.IsCheckmate(isWhite))
+            {
+                Debug.Log($"{(isWhite ? "White" : "Black")} is in checkmate!");
+            }
+        }
     }
+
 
     public bool IsTurnFor(string pieceType)
     {
