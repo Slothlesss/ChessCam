@@ -167,6 +167,7 @@ public class GameManager : Singleton<GameManager>
             if (ChessRules.IsCheckmate(isWhite))
             {
                 Debug.Log($"{(isWhite ? "White" : "Black")} is in checkmate!");
+                NotificationUI.Instance.ShowEndGameBanner(!isWhite);
             }
         }
     }

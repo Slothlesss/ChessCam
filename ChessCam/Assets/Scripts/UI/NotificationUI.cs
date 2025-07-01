@@ -7,13 +7,17 @@ using UnityEngine.UI;
 
 public class NotificationUI : Singleton<NotificationUI>
 {
-    [Header("UI Elements")]
+    [Header("Notification")]
     [SerializeField] private CanvasGroup notification;
     [SerializeField] private Image background;
     [SerializeField] private TextMeshProUGUI messageUI;
     [SerializeField] private Sprite errorBackground;
     [SerializeField] private Sprite successBackground;
     [SerializeField] private Sprite loadingBackground;
+
+    [Header("Banner")]
+    [SerializeField] private GameObject winBanner;
+    [SerializeField] private GameObject loseBanner;
 
 
     [Header("Timing")]
@@ -40,6 +44,17 @@ public class NotificationUI : Singleton<NotificationUI>
             StopCoroutine(currentRoutine);
 
         currentRoutine = StartCoroutine(LoadingDotsRoutine(message));
+    }
+
+    public void ShowEndGameBanner(bool isWhiteWin)
+    {
+        ChessPiece whiteKing = ChessRules.FindKing(true);
+        ChessPiece blackKing = ChessRules.FindKing(false);
+        GameObject win = Instantiate(winBanner, isWhiteWin ? whiteKing.transform : blackKing.transform);
+        win.GetComponent<RectTransform>().anchoredPosition = new Vector2(50, 50);
+
+        GameObject lose = Instantiate(loseBanner, isWhiteWin ? blackKing.transform : whiteKing.transform);
+        lose.GetComponent<RectTransform>().anchoredPosition = new Vector2(50, 50);
     }
 
     private IEnumerator ShowRoutine(string message, bool isError)

@@ -4388,7 +4388,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.8742138, g: 0.871282, b: 0.635042, a: 0.654902}
+  m_Color: {r: 0.3137255, g: 0.24313726, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -4820,6 +4820,8 @@ MonoBehaviour:
   errorBackground: {fileID: 21300000, guid: dcd0747ab51b0b145b90842293fc36cc, type: 3}
   successBackground: {fileID: 21300000, guid: 3b486e3e44a49eb42851e311b8bbbd7f, type: 3}
   loadingBackground: {fileID: 21300000, guid: e192517b8cb3c8241ac9e8da2aa85648, type: 3}
+  winBanner: {fileID: 1475607570888760313, guid: a144a68e75f16684e85c2deabe0875a8, type: 3}
+  loseBanner: {fileID: 1475607570888760313, guid: 77e1894e0c68676499c3bbe7118bb885, type: 3}
   fadeDuration: 0.5
   displayDuration: 3
 --- !u!1 &1974667477
