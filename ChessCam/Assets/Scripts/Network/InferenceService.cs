@@ -90,7 +90,7 @@ public class InferenceService : Singleton<InferenceService>
             UnityWebRequest request = UnityWebRequest.Post(APIConfig.Inference.Detect, formData);
             request.SetRequestHeader("Accept", "application/json");
 
-            NotificationUI.Instance.StartLoadingMessage("Requesting");
+            NotificationUI.Instance.StartLoadingMessage("Analyzing");
 
             yield return request.SendWebRequest(); 
 
@@ -111,7 +111,7 @@ public class InferenceService : Singleton<InferenceService>
                         .Where(pred => pred.confidence >= 0.8f)
                         .ToArray();
 
-                    NotificationUI.Instance.ShowMessage("Successfully inference. You can spawn now.", false);
+                    NotificationUI.Instance.ShowMessage("Successfully detect. You can spawn now.", false);
                 }
             }
             else

@@ -4116,7 +4116,7 @@ MonoBehaviour:
   whiteRookPrefab: {fileID: 21300000, guid: 2d8e576eb3400fc42aa98d4b6eb09e55, type: 3}
   whitePawnPrefab: {fileID: 21300000, guid: 291c9f7ece3b5d141825991c823e3a4b, type: 3}
   blackKingPrefab: {fileID: 21300000, guid: cfab00ee7730ae24eb77e465253be2bd, type: 3}
-  blackQueenPrefab: {fileID: 21300000, guid: 9c200f181ff7fdd4baa480170d10f33a, type: 3}
+  blackQueenPrefab: {fileID: 21300000, guid: 9ace90979cfa6d64fb4dceb9f16be86a, type: 3}
   blackBishopPrefab: {fileID: 21300000, guid: 8b53019b29d2c5f418c548670b2a9a44, type: 3}
   blackKnightPrefab: {fileID: 21300000, guid: 8ad3361c2a71f3040b96baa592527fb0, type: 3}
   blackRookPrefab: {fileID: 21300000, guid: 5ccbd86519c58414b96a74107f1537d6, type: 3}
@@ -4388,7 +4388,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.3137255, g: 0.24313726, b: 0, a: 1}
+  m_Color: {r: 0.12156863, g: 0.16078432, b: 0.21568628, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -4928,7 +4928,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Inference
+  m_text: Analyze
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
