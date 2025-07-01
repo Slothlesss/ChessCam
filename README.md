@@ -34,17 +34,12 @@ Your username and password will be stored, and the password encrypted with Werkz
 
 ## 3. Deploy with Docker
 ### 3.1 Install Docker
-Ensure you have [Docker](https://docs.docker.com/get-started/get-docker/) installed.
+Ensure you have [Docker](https://docs.docker.com/get-started/get-docker/) and [DockerCompose](https://docs.docker.com/compose/install/) installed.
 
-### 3.2 Build Docker Image
+### 3.3 Run the backend
 ```
 cd Backend
-docker build -t chesscam-backend .
-```
-
-### 3.3 Run the container
-```
-docker run -d -p 8000:8000 chesscam-backend
+docker-compose up --build
 ```
 
 ### 3.4 Update BaseUrl
