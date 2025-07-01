@@ -2,9 +2,7 @@
 # ♟️ ChessCam 📸
 
 **ChessCam** is an chessboard recognition app that detects the positions of chess pieces from an image and recreates the board, allowing players to continue a gameplay.
-
-![image](https://github.com/user-attachments/assets/39db63a6-d988-4326-8938-20e56a8a41dc)
-
+![image](https://github.com/user-attachments/assets/2a57ad38-418d-49c6-95a2-6866376a8912)
 
 ## 1. Playable version
 You can try the playable web build hosted on Itch.io:
@@ -14,47 +12,43 @@ You can try the playable web build hosted on Itch.io:
   </a>
 </p>
 
+## 2. Instruction Video
 
-## 2. Instruction and Features
-### 2.1 Login and Registration
-![image](https://github.com/user-attachments/assets/d80a239e-3c9f-44a4-a4da-1bd231b3ce7a)
-Your username and password will be stored, and the password encrypted with Werkzerg.
+https://github.com/user-attachments/assets/26e27d2b-8dc6-4725-a0f6-f99c3ad662c7
 
-### 2.2 Inference
+## 3. Features
+### 3.1 Login and Registration
+Your username and password will be stored online, and the password is encrypted with Werkzerg.
+
+### 3.2 Inference
 - Step 1: Click "Choose Image" to upload a chessboard image.
 - Step 2: Click "Inference" and wait until you see "Sucessfully inference...".
 - Step 3: Click "Spawn Pieces".
 - Step 4: (Optional) Change the settings (turn and board flip).
 => You can continue the gameplay now.
 
-### 2.3 Inference History
-![image](https://github.com/user-attachments/assets/bf278c46-6c35-4c47-8a71-24c8b3292eec)
+### 3.3 Inference History
 - Each user will have 3 inference attempts per day (reset at 00:00 UTC time).
 - You can click to history image to spawn the board.
 
-## 3. Deploy with Docker
-### 3.1 Install Docker
-Ensure you have [Docker](https://docs.docker.com/get-started/get-docker/) installed.
+## 4. Deploy with Docker
+### 4.1 Install Docker
+Ensure you have [Docker](https://docs.docker.com/get-started/get-docker/) and [DockerCompose](https://docs.docker.com/compose/install/) installed.
 
-### 3.2 Build Docker Image
+### 4.2 Run the backend
 ```
 cd Backend
-docker build -t chesscam-backend .
+docker-compose up --build
 ```
 
-### 3.3 Run the container
-```
-docker run -d -p 8000:8000 chesscam-backend
-```
-
-### 3.4 Update BaseUrl
+### 4.3 Update BaseUrl
 - Open the file: `Assets/Script/Network/APIConfig.cs`
 - Update BaseUrl:
 ```
 public static string BaseUrl = "http://localhost:8000";
 ```
 
-## 4. Asset Attribution
+## 5. Asset Attribution
 
 ### Chess Piece Assets
 - The chess piece images used in this project are sourced from [**Lichess**](https://lichess.org).
