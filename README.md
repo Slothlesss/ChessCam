@@ -59,7 +59,7 @@ public static string BaseUrl = "http://localhost:8000";
 ### Chess Piece Assets
 - The chess piece images used in this project are sourced from [**Lichess**](https://lichess.org).
 - Lichess piece sets are released under the **Creative Commons Attribution 4.0 International (CC BY 4.0)** license.
-- You can find the original asset sets at: https://github.com/lichess-org/lila/tree/master/public/piece
+- You can find the original asset sets at: https://github.com/lichess-org/lila/tree/master/public/piece/staunty
 
 ✅ Attribution (as required by CC BY 4.0):
 > Chess piece graphics © [lichess.org](https://lichess.org), used under CC BY 4.0.
