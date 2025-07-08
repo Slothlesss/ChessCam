@@ -6,11 +6,13 @@ using System.IO;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 
 
 public class InferenceService : Singleton<InferenceService>
 {
     [SerializeField] private Texture2D image;
+    [SerializeField] private GameObject chooseImageGroup;
 
     public InferenceResponse inferenceResult;
     public HistoryResponse historyResult;
@@ -35,6 +37,14 @@ public class InferenceService : Singleton<InferenceService>
         }
 #endif
     }
+    
+    public void SelectSampleImage(Image sample)
+    {
+        image = sample.sprite.texture;
+        chooseImageGroup.SetActive(false);
+        NotificationUI.Instance.ShowMessage("Image uploaded. Click 'Analyze' to continue", false);
+    }
+
     public void Inference()
     {
         StartCoroutine(SendImageForInference());
@@ -169,16 +179,21 @@ public class InferenceService : Singleton<InferenceService>
 
     public void ReceiveImageData(string base64)
     {
-        Debug.Log("Received image from WebGL");
-
-        base64 = base64.Substring(base64.IndexOf(",") + 1); // remove "data:image/jpeg;base64,..."
+        base64 = base64.Substring(base64.IndexOf(",") + 1);
         byte[] bytes = Convert.FromBase64String(base64);
 
         image = new Texture2D(2, 2);
-        image.LoadImage(bytes);
-
-        Debug.Log("Image loaded into Texture2D");
+        if (image.LoadImage(bytes))
+        {
+            chooseImageGroup.SetActive(false);
+            NotificationUI.Instance.ShowMessage("Image uploaded. Click 'Analyze' to continue", false);
+        }
+        else
+        {
+            NotificationUI.Instance.ShowMessage("Failed to load image data.", true);
+        }
     }
+
 
 
     public int GetImageWidth()
